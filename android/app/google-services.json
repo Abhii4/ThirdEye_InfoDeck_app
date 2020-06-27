@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "64162882123",
+    "firebase_url": "https://infodeck-483ed.firebaseio.com",
+    "project_id": "infodeck-483ed",
+    "storage_bucket": "infodeck-483ed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:64162882123:android:abc0d541bff7210a2b23ce",
+        "android_client_info": {
+          "package_name": "com.abhi.infodeck"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "64162882123-qd65g0hqtaojqnahfof4aa8jab24anj8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAakZB48E7yJfc9EfPX59_777YOTIUYJAY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "64162882123-qd65g0hqtaojqnahfof4aa8jab24anj8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
