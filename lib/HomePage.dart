@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:infodeck/secondAprroach/editRetailer.dart';
 import 'package:infodeck/secondAprroach/firestoreservice.dart';
 import 'package:infodeck/secondAprroach/retailer.dart';
 import 'package:infodeck/secondAprroach/retailerScreen.dart';
@@ -42,6 +43,11 @@ class _HomePageState extends State<HomePage> {
 
   }
 
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,6 +76,7 @@ class _HomePageState extends State<HomePage> {
                               elevation: 14.0,
                               shadowColor: Color(0x802196F3),
                               child: Center(
+                                child: GestureDetector(
                                 child: Padding(
                                   padding: EdgeInsets.all(8.0),
                                   child: Row(
@@ -82,22 +89,15 @@ class _HomePageState extends State<HomePage> {
                                             color: Colors.black,
                                             fontSize: 20.0),
                                       ),
-                                      Column(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(
-                                            '${items[index].phone}',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 18.0,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      )
+
                                     ],
                                   ),
                                 ),
+                                  onTap: () {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) => EditRetailer(items[index])));
+                                  },
+                  ),
                               ),
                             ),
                           ),
@@ -120,13 +120,20 @@ class _HomePageState extends State<HomePage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => RetailerScreen(Retailer('', '', '', '')),
+                builder: (context) => EditRetailer(),
                 fullscreenDialog: true),
           );
         },
       ),
     );
   }
+
+
+
+
+
+
+
 
 
 

@@ -1,55 +1,38 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:infodeck/secondAprroach/retailer.dart';
 
+import 'firestoreservice.dart';
 
-
-
-final _auth = FirebaseAuth.instance;
-
-class NewRetailer extends StatefulWidget {
-  NewRetailer();
+class RetailerScreen extends StatefulWidget {
+  final Retailer retailer;
+  RetailerScreen(this.retailer);
   @override
-  _NewRetailerState createState() => _NewRetailerState();
+  _RetailerScreenState createState() => _RetailerScreenState();
 }
 
-class _NewRetailerState extends State<NewRetailer> {
+class _RetailerScreenState extends State<RetailerScreen> {
+  FirestoreService fireServ = new FirestoreService();
 
-  String name,phone,gst,address;
+  TextEditingController _retailerNameController;
+  TextEditingController _retailerPhoneController;
+  TextEditingController _retailerGstController;
+  TextEditingController _retailerAddressController;
 
-  getName(name){
-    this.name=name;
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    _retailerNameController = new TextEditingController(text: widget.retailer.name);
+    _retailerPhoneController = new TextEditingController(text: widget.retailer.phone);
+    _retailerGstController = new TextEditingController(text: widget.retailer.gst);
+    _retailerAddressController = new TextEditingController(text: widget.retailer.address);
   }
-  getPhone(phone){
-    this.phone=phone;
-  }
-  getGst(gst){
-    this.gst=gst;
-  }
-  getAddress(address){
-    this.address=address;
-  }
 
 
 
-  createData() async {
-
-    final FirebaseUser user = await _auth.currentUser();
-    final uid = user.uid;
-    DocumentReference ds=Firestore.instance.collection('Retailers').document(uid);
-    Map<String,dynamic> retailers={
-      "name":name,
-      "phone":phone,
-      "gst":gst,
-      "address":address,
-    };
-
-    ds.setData(retailers).whenComplete((){
-      print("task updated");
-    });
-
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,41 +48,29 @@ class _NewRetailerState extends State<NewRetailer> {
                 Padding(
                   padding: EdgeInsets.only(left: 16.0, right: 16.0),
                   child: TextField(
-                    // controller: _taskNameController,
-                    onChanged: (String name){
-                      getName(name);
-                    },
+                    controller: _retailerNameController,
                     decoration: InputDecoration(labelText: "Name: "),
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 16.0, right: 16.0),
                   child: TextField(
-                    //controller: _taskDetailsController,
-                    decoration: InputDecoration(labelText: "Phone no: "),
-                    onChanged: (String phone){
-                      getPhone(phone);
-                    },
+                    controller: _retailerPhoneController,
+                    decoration: InputDecoration(labelText: "Phone: "),
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 16.0, right: 16.0),
                   child: TextField(
-                    // controller: _taskDateController,
+                    controller: _retailerGstController,
                     decoration: InputDecoration(labelText: "GST: "),
-                    onChanged: (String gst){
-                      getGst(gst);
-                    },
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 16.0, right: 16.0),
                   child: TextField(
-                    // controller: _taskTimeController,
+                    controller: _retailerAddressController,
                     decoration: InputDecoration(labelText: "Address: "),
-                    onChanged: (String address){
-                      getAddress(address);
-                    },
                   ),
                 ),
                 SizedBox(
@@ -121,7 +92,9 @@ class _NewRetailerState extends State<NewRetailer> {
                     RaisedButton(
                         color: Color(0xFFFA7397),
                         onPressed: () {
-                          createData();
+                          fireServ.createRetailer(_retailerNameController.text, _retailerPhoneController.text,_retailerGstController.text,_retailerAddressController.text).then((_) {
+                            Navigator.pop(context);
+                          });
                         },
                         child: const Text(
                           "Submit",

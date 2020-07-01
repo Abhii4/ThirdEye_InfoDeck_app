@@ -9,7 +9,7 @@ class FirestoreService {
 
   Future<Retailer> createRetailer(String name, String phone,String gst,String address) async {
     final TransactionHandler createTransaction = (Transaction tx) async {
-      final DocumentSnapshot ds = await tx.get(myCollection.document());
+      final DocumentSnapshot ds = await tx.get(myCollection.document(name));
 
       final Retailer retailer = new Retailer(name, phone,gst,address);
       final Map<String, dynamic> data = retailer.toMap();
@@ -35,6 +35,15 @@ class FirestoreService {
       snapshots = snapshots.take(limit);
     }
     return snapshots;
+  }
+
+
+  Future<void> saveRetailer(Retailer retailer){
+    return Firestore.instance.collection('Retailers').document(retailer.name).setData(retailer.toMap());
+  }
+
+  Future<void> removeProduct(String name){
+    return Firestore.instance.collection('Retailers').document(name).delete();
   }
 
 

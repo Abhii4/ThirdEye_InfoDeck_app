@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:infodeck/secondAprroach/retailerProvider.dart';
+import 'package:provider/provider.dart';
+import 'package:infodeck/secondAprroach/firestoreservice.dart';
 
 
 import 'auth/register.dart';
@@ -10,8 +13,20 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-        home: new HomeScreen());
+    FirestoreService fireServ = new FirestoreService();
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => RetailerProvider()),
+        StreamProvider(create: (context)=> fireServ.getRetailerList()),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: HomeScreen(),
+      ),
+    );
   }
 }
 
