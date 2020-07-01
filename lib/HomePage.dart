@@ -8,7 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:infodeck/secondAprroach/editRetailer.dart';
 import 'package:infodeck/secondAprroach/firestoreservice.dart';
 import 'package:infodeck/secondAprroach/retailer.dart';
-import 'package:infodeck/secondAprroach/retailerScreen.dart';
+
 
 
 
