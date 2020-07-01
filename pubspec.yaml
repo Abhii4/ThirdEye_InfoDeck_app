@@ -22,9 +22,9 @@ dependencies:
 
   firebase_auth:
   google_sign_in:
-  firebase_core: 0.3.1+1
   font_awesome_flutter:
   google_fonts:
+  firebase_core: 0.3.1+1
   cloud_firestore: ^0.9.13
 
 dev_dependencies:
