@@ -63,7 +63,7 @@ class _EditRetailerState extends State<EditRetailer> {
     final retailerProvider = Provider.of<RetailerProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Edit Retailer')),
+      appBar: AppBar(title: Text('Retailer Details)),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListView(
