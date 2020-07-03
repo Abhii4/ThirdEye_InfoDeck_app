@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import 'package:infodeck/animations/FadeAnimation.dart';
 import 'package:infodeck/secondAprroach/retailer.dart';
 import 'package:infodeck/secondAprroach/retailerProvider.dart';
 import 'package:provider/provider.dart';
@@ -37,22 +37,23 @@ class _EditRetailerState extends State<EditRetailer> {
       gstController.text = "";
       addressController.text = "";
       new Future.delayed(Duration.zero, () {
-        final retailerProvider = Provider.of<RetailerProvider>(context,listen: false);
-        retailerProvider.loadValues(Retailer(null,null,null,null));
+        final retailerProvider =
+        Provider.of<RetailerProvider>(context, listen: false);
+        retailerProvider.loadValues(Retailer(null, null, null, null));
       });
     } else {
       //Controller Update
-      nameController.text=widget.retailer.name;
-      phoneController.text=widget.retailer.phone;
-      gstController.text=widget.retailer.gst;
-      addressController.text=widget.retailer.address;
+      nameController.text = widget.retailer.name;
+      phoneController.text = widget.retailer.phone;
+      gstController.text = widget.retailer.gst;
+      addressController.text = widget.retailer.address;
 
       //State Update
       new Future.delayed(Duration.zero, () {
-        final retailerProvider = Provider.of<RetailerProvider>(context,listen: false);
+        final retailerProvider =
+        Provider.of<RetailerProvider>(context, listen: false);
         retailerProvider.loadValues(widget.retailer);
       });
-
     }
 
     super.initState();
@@ -63,56 +64,218 @@ class _EditRetailerState extends State<EditRetailer> {
     final retailerProvider = Provider.of<RetailerProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Retailer Details')),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListView(
-          children: <Widget>[
-            TextField(
-              controller: nameController,
-              decoration: InputDecoration(hintText: 'Retailer Name'),
-              onChanged: (value) {
-                retailerProvider.changeName(value);
-              },
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.orangeAccent,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            height: 130,
+            child: Stack(
+              children: <Widget>[
+                Positioned(
+                    child: FadeAnimation(
+                      1,
+                      Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: AssetImage("assets/images/1.png"),
+                          ),
+                        ),
+                      ),
+                    ))
+              ],
             ),
-            TextField(
-              controller: phoneController,
-              decoration: InputDecoration(hintText: 'Retailer Phone'),
-              onChanged: (value) => retailerProvider.changePhone(value),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                FadeAnimation(
+                    1,
+                    Text(
+                      "Edit Retailer Detail",
+                      style: TextStyle(color: Colors.white, fontSize: 30),
+                    )),
+                SizedBox(
+                  height: 10,
+                ),
+              ],
             ),
-            TextField(
-              controller: gstController,
-              decoration: InputDecoration(hintText: 'Retailer GST'),
-              onChanged: (value) => retailerProvider.changeGst(value),
+          ),
+          SizedBox(height: 20),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(50),
+                      topRight: Radius.circular(50))),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 20,
+                      ),
+                      FadeAnimation(
+                          1.4,
+                          Container(
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Color.fromRGBO(225, 95, 27, .3),
+                                      blurRadius: 20,
+                                      offset: Offset(0, 10))
+                                ]),
+                            child: Column(
+                              children: <Widget>[
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.grey[500]))),
+                                  child: TextField(
+                                    controller: nameController,
+                                    onChanged: (value) =>
+                                        retailerProvider.changeName(value),
+                                    decoration: InputDecoration(
+                                        hintText: "Retailer Name",
+                                        hintStyle:
+                                        TextStyle(color: Colors.grey),
+                                        border: InputBorder.none),
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.grey[500]))),
+                                  child: TextField(
+                                    controller: phoneController,
+                                    onChanged: (value) =>
+                                        retailerProvider.changePhone(value),
+                                    decoration: InputDecoration(
+                                        hintText: "Retailer Phone",
+                                        hintStyle:
+                                        TextStyle(color: Colors.grey),
+                                        border: InputBorder.none),
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.grey[500]))),
+                                  child: TextField(
+                                    controller: gstController,
+                                    onChanged: (value) =>
+                                        retailerProvider.changeGst(value),
+                                    decoration: InputDecoration(
+                                        hintText: "Retailer GST",
+                                        hintStyle:
+                                        TextStyle(color: Colors.grey),
+                                        border: InputBorder.none),
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.grey[500]))),
+                                  child: TextField(
+                                    controller: addressController,
+                                    onChanged: (value) =>
+                                        retailerProvider.changeAddress(value),
+                                    decoration: InputDecoration(
+                                        hintText: "Retailer Address",
+                                        hintStyle:
+                                        TextStyle(color: Colors.grey),
+                                        border: InputBorder.none),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: FadeAnimation(
+                              1.8,
+                              GestureDetector(
+                                  onTap: () {
+                                    retailerProvider.saveRetailer();
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: Colors.black),
+                                    child: Center(
+                                      child: Text(
+                                        "Add",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  )),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 30,
+                          ),
+                          Expanded(
+                            child: FadeAnimation(
+                              1.9,
+                              (widget.retailer != null)
+                                  ? GestureDetector(
+                                  onTap: () {
+                                    retailerProvider.removeProduct(
+                                        widget.retailer.name);
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                        BorderRadius.circular(50),
+                                        color: Colors.black),
+                                    child: Center(
+                                      child: Text(
+                                        "Delete",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ))
+                                  : Container(),
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
             ),
-            TextField(
-              controller: addressController,
-              decoration: InputDecoration(hintText: 'Retailer Address'),
-              onChanged: (value) => retailerProvider.changeAddress(value),
-            ),
-            SizedBox(
-              height: 20.0,
-            ),
-            RaisedButton(
-              child: Text('Save'),
-              onPressed: () {
-                retailerProvider.saveRetailer();
-                Navigator.of(context).pop();
-              },
-            ),
-            (widget.retailer !=null) ? RaisedButton(
-              color: Colors.red,
-              textColor: Colors.white,
-              child: Text('Delete'),
-              onPressed: () {
-                retailerProvider.removeProduct(widget.retailer.name);
-                Navigator.of(context).pop();
-              },
-            ): Container(),
-          ],
-        ),
+          )
+        ],
       ),
     );
-
   }
 }

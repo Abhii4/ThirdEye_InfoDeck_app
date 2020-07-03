@@ -20,17 +20,17 @@ class MyApp extends StatelessWidget {
         StreamProvider(create: (context)=> fireServ.getRetailerList()),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'InfoDeck',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: HomeScreen(),
+        home: MainPage(),
       ),
     );
   }
 }
 
-class HomeScreen extends StatelessWidget {
+class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

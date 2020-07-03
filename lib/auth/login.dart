@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:infodeck/animations/FadeAnimation.dart';
@@ -8,9 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../HomePage.dart';
 
-
-
-
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -18,36 +13,33 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _auth = FirebaseAuth.instance;
-  String email,password;
-
+  String email, password;
 
   Future<void> login() async {
     try {
-      final newUser = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      final newUser = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
       if (newUser != null) {
-        Navigator.push(context,
-          MaterialPageRoute(
-              builder: (context) => HomePage()),
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
         );
       }
-    }
-    catch (e)
-    {
+    } catch (e) {
       print(e);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Color(0xff21254A),
+      backgroundColor: Colors.orangeAccent,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            height: 200,
+            height: 150,
             child: Stack(
               children: <Widget>[
                 Positioned(
@@ -112,8 +104,8 @@ class _LoginPageState extends State<LoginPage> {
                               hintText: "Email",
                               hintStyle: TextStyle(color: Colors.grey),
                             ),
-                            onChanged: (value){
-                              email=value;
+                            onChanged: (value) {
+                              email = value;
                             },
                           ),
                         ),
@@ -127,12 +119,13 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           child: TextField(
+                            obscureText: true,
                             decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: "Password",
                                 hintStyle: TextStyle(color: Colors.grey)),
-                            onChanged: (value){
-                              password=value;
+                            onChanged: (value) {
+                              password = value;
                             },
                           ),
                         )
@@ -159,25 +152,23 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 FadeAnimation(
                   1,
-                  Container(
-                    height: 50,
-                    margin: EdgeInsets.symmetric(horizontal: 60),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: Color.fromRGBO(49, 39, 79, 1),
-                    ),
-
-                    child: Center(
-                      child: GestureDetector(
-                        onTap: () {
-                         login();
-                        },
+                  GestureDetector(
+                    onTap: () {
+                      login();
+                    },
+                    child: Container(
+                      height: 50,
+                      margin: EdgeInsets.symmetric(horizontal: 60),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        color: Color.fromRGBO(49, 39, 79, 1),
+                      ),
+                      child: Center(
                         child: Text(
                           "Login",
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
-
                     ),
                   ),
                 ),
@@ -191,8 +182,11 @@ class _LoginPageState extends State<LoginPage> {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => RegPage()));
                     },
-                    child: new Text("Need an Account?", style: TextStyle(
-                      color: Colors.pink[200],),
+                    child: new Text(
+                      "Need an Account?",
+                      style: TextStyle(
+                        color: Colors.pink[200],
+                      ),
                     ),
                   ),
                 ),

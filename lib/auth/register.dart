@@ -1,15 +1,9 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:infodeck/HomePage.dart';
 import 'package:infodeck/animations/FadeAnimation.dart';
-
 import 'login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-
-
 
 class RegPage extends StatefulWidget {
   @override
@@ -17,7 +11,6 @@ class RegPage extends StatefulWidget {
 }
 
 class _RegPageState extends State<RegPage> {
-
   final _auth = FirebaseAuth.instance;
   String email, password;
 
@@ -26,25 +19,21 @@ class _RegPageState extends State<RegPage> {
       final newUser = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       if (newUser != null) {
-        Navigator.push(context,
-          MaterialPageRoute(
-              builder: (context) => HomePage()),
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
         );
       }
-    }
-    catch (e)
-    {
+    } catch (e) {
       print(e);
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Color(0xff21254A),
+      backgroundColor: Colors.orangeAccent,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -114,8 +103,8 @@ class _RegPageState extends State<RegPage> {
                               hintText: "Email",
                               hintStyle: TextStyle(color: Colors.grey),
                             ),
-                            onChanged: (value){
-                              email= value;
+                            onChanged: (value) {
+                              email = value;
                             },
                           ),
                         ),
@@ -133,8 +122,8 @@ class _RegPageState extends State<RegPage> {
                                 border: InputBorder.none,
                                 hintText: "Password",
                                 hintStyle: TextStyle(color: Colors.grey)),
-                            onChanged: (value){
-                              password= value;
+                            onChanged: (value) {
+                              password = value;
                             },
                           ),
                         )
@@ -147,26 +136,24 @@ class _RegPageState extends State<RegPage> {
                 ),
                 FadeAnimation(
                   1,
-                  Container(
-                    height: 50,
-                    margin: EdgeInsets.symmetric(horizontal: 60),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: Color.fromRGBO(49, 39, 79, 1),
-                    ),
-
-                    child: Center(
-                       child: GestureDetector(
-                        onTap: () {
-                          register();
-                        },
+                  GestureDetector(
+                    onTap: () {
+                      register();
+                    },
+                    child: Container(
+                      height: 50,
+                      margin: EdgeInsets.symmetric(horizontal: 60),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        color: Color.fromRGBO(49, 39, 79, 1),
+                      ),
+                      child: Center(
                         child: Text(
                           "Sign Up",
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
-
-                  ),
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -179,8 +166,11 @@ class _RegPageState extends State<RegPage> {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => LoginPage()));
                     },
-                    child: new Text("Already a Member?", style: TextStyle(
-                      color: Colors.pink[200],),
+                    child: new Text(
+                      "Already a Member?",
+                      style: TextStyle(
+                        color: Colors.pink[200],
+                      ),
                     ),
                   ),
                 ),
