@@ -9,7 +9,24 @@ import 'package:infodeck/secondAprroach/editRetailer.dart';
 import 'package:infodeck/secondAprroach/firestoreservice.dart';
 import 'package:infodeck/secondAprroach/retailer.dart';
 
+import 'auth/auth.dart';
+import 'auth/authProvider.dart';
+
 class HomePage extends StatefulWidget {
+  const HomePage({this.onSignedOut});
+  final VoidCallback onSignedOut;
+
+
+  Future<void> _signOut(BuildContext context) async {
+    try {
+      final BaseAuth auth = AuthProvider.of(context).auth;
+      await auth.signOut();
+      onSignedOut();
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   _HomePageState createState() => _HomePageState();
 }
