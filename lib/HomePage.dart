@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -11,6 +12,8 @@ import 'package:infodeck/secondAprroach/retailer.dart';
 
 import 'auth/auth.dart';
 import 'auth/authProvider.dart';
+
+
 
 class HomePage extends StatefulWidget {
   const HomePage({this.onSignedOut});
@@ -29,14 +32,24 @@ class HomePage extends StatefulWidget {
     }
   }
 
+
+
+
+
+
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   List<Retailer> items;
   FirestoreService fireServ = new FirestoreService();
   StreamSubscription<QuerySnapshot> createRetailer;
+
+
 
   @override
   void initState() {
@@ -81,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                       border: new Border(
                           right: new BorderSide(
                               width: 1.0, color: Colors.white24))),
-                  child: Icon(Icons.autorenew, color: Colors.white),
+                  child: Icon(Icons.account_circle, color: Colors.white),
                 ),
                 title: Text(
                   items[index].name,
@@ -116,8 +129,9 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {},
             ),
             IconButton(
-              icon: Icon(Icons.account_box, color: Colors.white),
-              onPressed: () {},
+              icon: Icon(Icons.exit_to_app, color: Colors.white),
+              onPressed: () {
+                },
             )
           ],
         ),
