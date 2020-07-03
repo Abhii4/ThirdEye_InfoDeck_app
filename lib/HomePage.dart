@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
-import 'package:infodeck/animations/FadeAnimation.dart';
+
 import 'package:infodeck/secondAprroach/editRetailer.dart';
 import 'package:infodeck/secondAprroach/firestoreservice.dart';
 import 'package:infodeck/secondAprroach/retailer.dart';
@@ -15,6 +15,8 @@ import 'auth/authProvider.dart';
 class HomePage extends StatefulWidget {
   const HomePage({this.onSignedOut});
   final VoidCallback onSignedOut;
+
+
 
 
   Future<void> _signOut(BuildContext context) async {
@@ -55,149 +57,92 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.orangeAccent,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            height: 120,
-            child: Stack(
-              children: <Widget>[
-                Positioned(
-                    child: FadeAnimation(
-                      1,
-                      Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage("assets/images/1.png"),
-                          ),
-                        ),
-                      ),
-                    ))
-              ],
+    final makeBody = Container(
+      // decoration: BoxDecoration(color: Color.fromRGBO(58, 66, 86, 1.0)),
+      child: ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemCount: items.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Card(
+            elevation: 8.0,
+            margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+            child: Container(
+              decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
+              child: ListTile(
+                contentPadding:
+                EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                leading: Container(
+                  padding: EdgeInsets.only(right: 12.0),
+                  decoration: new BoxDecoration(
+                      border: new Border(
+                          right: new BorderSide(
+                              width: 1.0, color: Colors.white24))),
+                  child: Icon(Icons.autorenew, color: Colors.white),
+                ),
+                title: Text(
+                  items[index].name,
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+                trailing: Icon(Icons.keyboard_arrow_right,
+                    color: Colors.white, size: 30.0),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EditRetailer(items[index])));
+                },
+              ),
             ),
-          ),
-          Positioned(
-            child: Text(
-              "Retailers List",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold),
-            ),
-            top: 30,
-            left: 20,
-          ),
-          Expanded(
-            child: DraggableScrollableSheet(
-              maxChildSize: 0.85,
-              minChildSize: 0.1,
-              builder:
-                  (BuildContext context, ScrollController scrolController) {
-                return Stack(
-                  overflow: Overflow.visible,
-                  children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(40),
-                            topLeft: Radius.circular(40)),
-                      ),
-                      child: Expanded(
-                        child: ListView.builder(
-                          // itemCount: items.length,
-                          itemBuilder: (context, index) {
-                            return Stack(children: <Widget>[
-                              // The containers in the background
-                              Expanded(
-                                child: Column(children: <Widget>[
-                                  Padding(
-                                    padding:
-                                    EdgeInsets.only(left: 20.0, right: 20.0),
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: 80.0,
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            top: 8.0, bottom: 8.0),
-                                        child: GestureDetector(
-                                          child: Material(
-                                            color: Colors.white,
-                                            elevation: 14.0,
-                                            shadowColor: Color(0x802196F3),
-                                            child: Center(
-                                              child: Padding(
-                                                padding: EdgeInsets.all(8.0),
-                                                child: Expanded(
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        '${items[index].name}',
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 20.0),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          onTap: () {
-                                            Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        EditRetailer(
-                                                            items[index])));
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ]),
-                              ),
-                            ]);
-                          },
-                          controller: scrolController,
-                          itemCount: items.length,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      child: FloatingActionButton(
-                        child: Icon(
-                          Icons.add,
-                          color: Colors.white,
-                        ),
-                        backgroundColor: Colors.pinkAccent,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => EditRetailer(),
-                                fullscreenDialog: true),
-                          );
-                        },
-                      ),
-                      top: -30,
-                      right: 30,
-                    )
-                  ],
-                );
-              },
-            ),
-          )
-        ],
+          );
+        },
       ),
+    );
+
+    final makeBottom = Container(
+      height: 55.0,
+      child: BottomAppBar(
+        color: Color.fromRGBO(58, 66, 86, 1.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            IconButton(
+              icon: Icon(Icons.home, color: Colors.white),
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: Icon(Icons.account_box, color: Colors.white),
+              onPressed: () {},
+            )
+          ],
+        ),
+      ),
+    );
+    final topAppBar = AppBar(
+      elevation: 0.1,
+      backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
+      title: Text("Retailers"),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.list),
+          onPressed: () {},
+        )
+      ],
+    );
+
+    return Scaffold(
+      backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
+      appBar: topAppBar,
+      body: makeBody,
+      bottomNavigationBar: makeBottom,
     );
   }
 }
+
+
+
