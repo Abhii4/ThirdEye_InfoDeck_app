@@ -43,14 +43,14 @@ class _LoginPageState extends State<LoginPage> {
 
 
   Future<void> login() async {
-      try {
-        final BaseAuth auth = AuthProvider.of(context).auth;
-          final String userId = await auth.signInWithEmailAndPassword(email, password);
-          print('Signed in: $userId');
-        widget.onSignedIn();
-      } catch (e) {
-        print('Error: $e');
-      }
+    try {
+      final BaseAuth auth = AuthProvider.of(context).auth;
+      final String userId = await auth.signInWithEmailAndPassword(email, password);
+      print('Signed in: $userId');
+      widget.onSignedIn();
+    } catch (e) {
+      print('Error: $e');
+    }
 
   }
 
@@ -199,11 +199,11 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 SizedBox(
-                  height: 20.0,
+                  height: 25.0,
                 ),
                 FadeAnimation(
                   1,
-                  GestureDetector(
+                  InkWell(
                     onTap: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => RegPage()));
@@ -212,6 +212,7 @@ class _LoginPageState extends State<LoginPage> {
                       "Need an Account?",
                       style: TextStyle(
                         color: Colors.black,
+                          fontSize: 15
                       ),
                     ),
                   ),

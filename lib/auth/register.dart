@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:infodeck/animations/FadeAnimation.dart';
+import 'package:infodeck/profilePage.dart';
+import 'package:infodeck/root_page.dart';
 import 'login.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'auth.dart';
 import 'authProvider.dart';
 
@@ -21,40 +23,35 @@ class PasswordFieldValidator {
 
 
 class RegPage extends StatefulWidget {
-  const RegPage({this.onSignedIn});
-  final VoidCallback onSignedIn;
+
 
   @override
   _RegPageState createState() => _RegPageState();
 }
 
 class _RegPageState extends State<RegPage> {
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  final _auth = FirebaseAuth.instance;
+
   String email, password;
 
-  bool validateAndSave() {
-    final FormState form = formKey.currentState;
-    if (form.validate()) {
-      form.save();
-      return true;
-    }
-    return false;
-  }
+
 
   Future<void> register() async {
-    if (validateAndSave()) {
       try {
-        final BaseAuth auth = AuthProvider.of(context).auth;
+        final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-          final String userId = await auth.createUserWithEmailAndPassword(email, password);
-          print('Registered user: $userId');
-        widget.onSignedIn();
+        final newUser = await _firebaseAuth.createUserWithEmailAndPassword(
+            email: email, password: password);
+        if (newUser != null) {
+          Navigator.push(context,
+            MaterialPageRoute(
+                builder: (context) => RootPage()),
+          );
+        }
       } catch (e) {
         print('Error: $e');
       }
-    }
+
   }
 
   @override
@@ -147,6 +144,7 @@ class _RegPageState extends State<RegPage> {
                             ),
                           ),
                           child: TextFormField(
+                            obscureText: true,
                             decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: "Password",
@@ -187,19 +185,20 @@ class _RegPageState extends State<RegPage> {
                   ),
                 ),
                 SizedBox(
-                  height: 20.0,
+                  height: 25.0,
                 ),
                 FadeAnimation(
                   1,
                   InkWell(
                     onTap: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => LoginPage()));
+                          MaterialPageRoute(builder: (context) => RootPage()));
                     },
                     child: new Text(
                       "Already a Member?",
                       style: TextStyle(
                         color: Colors.black,
+                        fontSize: 15
                       ),
                     ),
                   ),

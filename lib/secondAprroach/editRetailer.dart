@@ -214,7 +214,7 @@ class _EditRetailerState extends State<EditRetailer> {
                           Expanded(
                             child: FadeAnimation(
                               1.8,
-                              GestureDetector(
+                              InkWell(
                                   onTap: () {
                                     retailerProvider.saveRetailer();
                                     Navigator.of(context).pop();
@@ -242,7 +242,7 @@ class _EditRetailerState extends State<EditRetailer> {
                             child: FadeAnimation(
                               1.9,
                               (widget.retailer != null)
-                                  ? GestureDetector(
+                                  ? InkWell(
                                   onTap: () {
                                     retailerProvider.removeProduct(
                                         widget.retailer.name);
