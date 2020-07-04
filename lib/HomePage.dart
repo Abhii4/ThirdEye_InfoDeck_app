@@ -1,8 +1,11 @@
 import 'dart:async';
 
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:infodeck/profilePage.dart';
+import 'package:infodeck/root_page.dart';
 
 
 
@@ -10,32 +13,11 @@ import 'package:infodeck/secondAprroach/editRetailer.dart';
 import 'package:infodeck/secondAprroach/firestoreservice.dart';
 import 'package:infodeck/secondAprroach/retailer.dart';
 
-import 'auth/auth.dart';
-import 'auth/authProvider.dart';
+
 
 
 
 class HomePage extends StatefulWidget {
-  const HomePage({this.onSignedOut});
-  final VoidCallback onSignedOut;
-
-
-
-
-  Future<void> _signOut(BuildContext context) async {
-    try {
-      final BaseAuth auth = AuthProvider.of(context).auth;
-      await auth.signOut();
-      onSignedOut();
-    } catch (e) {
-      print(e);
-    }
-  }
-
-
-
-
-
 
 
   @override
@@ -44,10 +26,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   List<Retailer> items;
   FirestoreService fireServ = new FirestoreService();
   StreamSubscription<QuerySnapshot> createRetailer;
+
+
+
 
 
 
@@ -117,36 +101,39 @@ class _HomePageState extends State<HomePage> {
       ),
     );
 
-    final makeBottom = Container(
-      height: 55.0,
-      child: BottomAppBar(
-        color: Color.fromRGBO(58, 66, 86, 1.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            IconButton(
-              icon: Icon(Icons.home, color: Colors.white),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: Icon(Icons.exit_to_app, color: Colors.white),
-              onPressed: () {
-                },
-            )
-          ],
+      final makeBottom = CurvedNavigationBar(
+        color: Colors.white,
+        backgroundColor: Colors.orangeAccent,
+        buttonBackgroundColor: Colors.white,
+        height: 50,
+        items: <Widget>[
+          Icon(Icons.event_note,size: 20,color: Colors.black),
+          Icon(Icons.add_circle,size: 50,color: Colors.redAccent),
+          Icon(Icons.account_box,size: 20,color: Colors.black),
+        ],
+        animationDuration: Duration(
+          milliseconds: 200
         ),
-      ),
-    );
+        index:1,
+        animationCurve: Curves.bounceInOut,
+        onTap: (index){
+          if(index==0){
+            Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+          }
+          else if(index==1){
+            Navigator.push(context, MaterialPageRoute(builder: (context) => EditRetailer()));
+          }
+          else{
+            Navigator.push(context, MaterialPageRoute(builder: (context) => RootPage()));
+          }
+        },
+      );
+
     final topAppBar = AppBar(
+      automaticallyImplyLeading: false,
       elevation: 0.1,
       backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
       title: Text("Retailers"),
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.list),
-          onPressed: () {},
-        )
-      ],
     );
 
     return Scaffold(
