@@ -1,32 +1,34 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:infodeck/secondAprroach/retailer.dart';
 
 
-final CollectionReference myCollection = Firestore.instance.collection('Retailers');
+
 
 class FirestoreService {
 
-  Future<Retailer> createRetailer(String name, String phone,String gst,String address) async {
-    final TransactionHandler createTransaction = (Transaction tx) async {
-      final DocumentSnapshot ds = await tx.get(myCollection.document(name));
 
-      final Retailer retailer = new Retailer(name, phone,gst,address);
-      final Map<String, dynamic> data = retailer.toMap();
-      await tx.set(ds.reference, data);
-      return data;
-    };
+  final CollectionReference myCollection = Firestore.instance.collection('users');
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+   FirebaseUser user;
 
-    return Firestore.instance.runTransaction(createTransaction).then((mapData) {
-      return Retailer.fromMap(mapData);
-    }).catchError((error) {
-      print('error: $error');
-      return null;
-    });
+  @override
+  Future<FirebaseUser> currentUser() async {
+    user = await FirebaseAuth.instance.currentUser();
+    return user;
   }
 
-  Stream<QuerySnapshot> getRetailerList({int offset, int limit}) {
-    Stream<QuerySnapshot> snapshots = myCollection.snapshots();
+
+
+
+
+
+
+
+  Stream<QuerySnapshot> getRetailerList({int offset, int limit}) async* {
+    final FirebaseUser user = await _auth.currentUser();
+    Stream<QuerySnapshot> snapshots = myCollection.document(user.uid).collection('retailers').snapshots();
 
     if (offset != null) {
       snapshots = snapshots.skip(offset);
@@ -34,16 +36,19 @@ class FirestoreService {
     if (limit != null) {
       snapshots = snapshots.take(limit);
     }
-    return snapshots;
+    yield* snapshots;
   }
 
 
-  Future<void> saveRetailer(Retailer retailer){
-    return Firestore.instance.collection('Retailers').document(retailer.name).setData(retailer.toMap());
+
+  Future<void> saveRetailer(Retailer retailer)  {
+    currentUser();
+    return myCollection.document(user.uid).collection('retailers').document(retailer.retailerId).setData(retailer.toMap());
   }
 
-  Future<void> removeProduct(String name){
-    return Firestore.instance.collection('Retailers').document(name).delete();
+  Future<void> removeProduct(String retailerId)  {
+    currentUser();
+    return myCollection.document(user.uid).collection('retailers').document(retailerId).delete();
   }
 
 

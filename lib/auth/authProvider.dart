@@ -12,4 +12,6 @@ class AuthProvider extends InheritedWidget {
 
   static AuthProvider of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType(aspect: AuthProvider);  }
+
+
 }

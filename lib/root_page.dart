@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:infodeck/profilePage.dart';
 
-import 'HomePage.dart';
+
 import 'auth/auth.dart';
 import 'auth/authProvider.dart';
 import 'auth/login.dart';
@@ -40,7 +40,6 @@ class _RootPageState extends State<RootPage> {
   void _signedOut() {
     setState(() {
       authStatus = AuthStatus.notSignedIn;
-      print('done');
     });
   }
 

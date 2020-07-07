@@ -39,7 +39,7 @@ class _EditRetailerState extends State<EditRetailer> {
       new Future.delayed(Duration.zero, () {
         final retailerProvider =
         Provider.of<RetailerProvider>(context, listen: false);
-        retailerProvider.loadValues(Retailer(null, null, null, null));
+        retailerProvider.loadValues(Retailer(null, null, null, null,null));
       });
     } else {
       //Controller Update
@@ -245,7 +245,7 @@ class _EditRetailerState extends State<EditRetailer> {
                                   ? InkWell(
                                   onTap: () {
                                     retailerProvider.removeProduct(
-                                        widget.retailer.name);
+                                        widget.retailer.retailerId);
                                     Navigator.of(context).pop();
                                   },
                                   child: Container(

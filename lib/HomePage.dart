@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:infodeck/profilePage.dart';
+
 import 'package:infodeck/root_page.dart';
 
 
@@ -12,6 +12,7 @@ import 'package:infodeck/root_page.dart';
 import 'package:infodeck/secondAprroach/editRetailer.dart';
 import 'package:infodeck/secondAprroach/firestoreservice.dart';
 import 'package:infodeck/secondAprroach/retailer.dart';
+
 
 
 
@@ -29,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   List<Retailer> items;
   FirestoreService fireServ = new FirestoreService();
   StreamSubscription<QuerySnapshot> createRetailer;
+
 
 
 
@@ -118,7 +120,6 @@ class _HomePageState extends State<HomePage> {
         animationCurve: Curves.bounceInOut,
         onTap: (index){
           if(index==0){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
           }
           else if(index==1){
             Navigator.push(context, MaterialPageRoute(builder: (context) => EditRetailer()));

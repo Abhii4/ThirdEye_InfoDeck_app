@@ -2,11 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:infodeck/animations/FadeAnimation.dart';
-import 'package:infodeck/profilePage.dart';
 import 'package:infodeck/root_page.dart';
-import 'login.dart';
-import 'auth.dart';
-import 'authProvider.dart';
+
 
 class EmailFieldValidator {
   static String validate(String value) {

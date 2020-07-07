@@ -4,8 +4,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:infodeck/auth/login.dart';
-import 'package:infodeck/root_page.dart';
+
 import 'package:infodeck/secondAprroach/editRetailer.dart';
 
 import 'HomePage.dart';
@@ -62,7 +61,6 @@ class ProfilePage extends StatelessWidget {
           Navigator.push(context, MaterialPageRoute(builder: (context) => EditRetailer()));
         }
         else{
-          Navigator.push(context, MaterialPageRoute(builder: (context) => RootPage()));
         }
       },
     );
