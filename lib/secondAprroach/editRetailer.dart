@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:infodeck/animations/FadeAnimation.dart';
+import 'package:infodeck/secondAprroach/packagePage.dart';
 import 'package:infodeck/secondAprroach/retailer.dart';
 import 'package:infodeck/secondAprroach/retailerProvider.dart';
 import 'package:provider/provider.dart';
@@ -57,6 +58,10 @@ class _EditRetailerState extends State<EditRetailer> {
     }
 
     super.initState();
+  }
+  _getretailerId(){
+    String retailerId = widget.retailer.retailerId;
+    return retailerId;
   }
 
   @override
@@ -265,9 +270,46 @@ class _EditRetailerState extends State<EditRetailer> {
                                   ))
                                   : Container(),
                             ),
-                          )
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row (
+                        children: <Widget>[
+                          Expanded(
+                            child: FadeAnimation(
+                              1.9,
+                              (widget.retailer != null)
+                                  ? InkWell(
+                                  onTap: () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) => PackagePage(
+                                          retailerId : _getretailerId
+                                        )));
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                        BorderRadius.circular(50),
+                                        color: Colors.black),
+                                    child: Center(
+                                      child: Text(
+                                        "View Packages",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ))
+                                  : Container(),
+                            ),
+                          ),
                         ],
                       )
+
                     ],
                   ),
                 ),

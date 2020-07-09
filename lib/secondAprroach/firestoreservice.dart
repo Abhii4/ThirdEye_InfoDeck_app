@@ -21,11 +21,6 @@ class FirestoreService {
 
 
 
-
-
-
-
-
   Stream<QuerySnapshot> getRetailerList({int offset, int limit}) async* {
     final FirebaseUser user = await _auth.currentUser();
     Stream<QuerySnapshot> snapshots = myCollection.document(user.uid).collection('retailers').snapshots();
