@@ -1,13 +1,20 @@
 
 
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:infodeck/secondAprroach/package.dart';
+
 
 class PackagePage extends StatefulWidget {
   PackagePage({this.retailerId});
   final  retailerId;
+
+
+
 
 
   @override
@@ -15,30 +22,47 @@ class PackagePage extends StatefulWidget {
 }
 
 class _PackagePage extends State<PackagePage> {
-  bool _isChecked = false;
+  List<Package> packageList;
 
-  List _texts = [];
+  List<Package> items;
+
+  StreamSubscription<QuerySnapshot> createPackage;
+
 
   @override
   void initState() {
     super.initState();
-    getPackages();
 
-  }
+    items = new List();
+    Stream<QuerySnapshot> getPackageList({int offset, int limit}) async* {
+      final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+      String retailerID = widget.retailerId();
+      Stream<QuerySnapshot> snapshots = Firestore.instance.collection('users').document(user.uid).collection('retailers').document(retailerID).collection('packages').snapshots();
 
-  getPackages() async{
-    String retailerID = widget.retailerId();
-    print(retailerID);
-    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    QuerySnapshot packages = await Firestore.instance.collection('users').document(user.uid).collection('retailers').document(retailerID).collection('packages').getDocuments();
-    setState(() {
-      for (int i = 0; i < packages.documents.length; i++) {
-        var a = packages.documents[i];
-        print(a.documentID);
-        _texts.add(a.documentID);
+      if (offset != null) {
+        snapshots = snapshots.skip(offset);
       }
-    });
+      if (limit != null) {
+        snapshots = snapshots.take(limit);
+      }
+      yield* snapshots;
+    }
+
+    createPackage?.cancel();
+    createPackage = getPackageList().listen((QuerySnapshot snapshot) {
+          final List<Package> packages = snapshot.documents
+              .map((documentSnapshot) => Package.fromFirestore(documentSnapshot.data))
+              .toList();
+
+          setState(() {
+            this.items = packages;
+          });
+        });
+
+
   }
+
+
 
 
 
@@ -46,6 +70,7 @@ class _PackagePage extends State<PackagePage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text("CheckBox in ListView Example"),
@@ -55,7 +80,7 @@ class _PackagePage extends State<PackagePage> {
         child: ListView.builder(
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
-          itemCount: _texts.length,
+          itemCount: items.length,
           itemBuilder: (BuildContext context, int index) {
             return Card(
               elevation: 8.0,
@@ -63,10 +88,13 @@ class _PackagePage extends State<PackagePage> {
               child: Container(
                 decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
                 child: CheckboxListTile(
-                  title: Text(_texts[index]),
-                  value: _isChecked,
-                  onChanged: (newValue) { setState(() {
-                    _isChecked = newValue;
+                  title: Text(items[index].name),
+                  value: items[index].check,
+                  onChanged: (newValue) { setState(() async {
+                    String retailerID = widget.retailerId();
+                    print(retailerID);
+                    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+                    Firestore.instance.collection('users').document(user.uid).collection('retailers').document(retailerID).collection('packages').document(items[index].name).updateData({'check' :newValue});
 
                   }); },
                   controlAffinity: ListTileControlAffinity.trailing,  //  <-- leading Checkbox
