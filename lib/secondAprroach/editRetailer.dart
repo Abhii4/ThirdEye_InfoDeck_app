@@ -4,6 +4,7 @@ import 'package:infodeck/secondAprroach/packagePage.dart';
 import 'package:infodeck/secondAprroach/retailer.dart';
 import 'package:infodeck/secondAprroach/retailerProvider.dart';
 import 'package:provider/provider.dart';
+import 'package:geolocator/geolocator.dart';
 
 class EditRetailer extends StatefulWidget {
   final Retailer retailer;
@@ -19,6 +20,7 @@ class _EditRetailerState extends State<EditRetailer> {
   final phoneController = TextEditingController();
   final gstController = TextEditingController();
   final addressController = TextEditingController();
+  String userLocation='';
 
   @override
   void dispose() {
@@ -40,7 +42,7 @@ class _EditRetailerState extends State<EditRetailer> {
       new Future.delayed(Duration.zero, () {
         final retailerProvider =
         Provider.of<RetailerProvider>(context, listen: false);
-        retailerProvider.loadValues(Retailer(null, null, null, null,null));
+        retailerProvider.loadValues(Retailer(null, null, null, null,null,null));
       });
     } else {
       //Controller Update
@@ -48,6 +50,7 @@ class _EditRetailerState extends State<EditRetailer> {
       phoneController.text = widget.retailer.phone;
       gstController.text = widget.retailer.gst;
       addressController.text = widget.retailer.address;
+      userLocation = widget.retailer.location;
 
       //State Update
       new Future.delayed(Duration.zero, () {
@@ -62,6 +65,21 @@ class _EditRetailerState extends State<EditRetailer> {
   _getretailerId(){
     String retailerId = widget.retailer.retailerId;
     return retailerId;
+  }
+
+  getLocation() async {
+
+    Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    List<Placemark> placemark = await Geolocator().placemarkFromCoordinates(position.latitude, position.longitude);
+    Placemark placeMark  = placemark[0];
+    String name = placeMark.name;
+    String subLocality = placeMark.subLocality;
+    String locality = placeMark.locality;
+    String administrativeArea = placeMark.administrativeArea;
+    String postalCode = placeMark.postalCode;
+    String country = placeMark.country;
+    String address = "${name}, ${subLocality}, ${locality}, ${administrativeArea} ${postalCode}, ${country}";
+    return address;
   }
 
   @override
@@ -208,9 +226,47 @@ class _EditRetailerState extends State<EditRetailer> {
                                         border: InputBorder.none),
                                   ),
                                 ),
+                                Container(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: RaisedButton(
+                                          onPressed: () async {
+                                            userLocation = await getLocation();
+                                            print("Location is :" + userLocation);
+                                            retailerProvider.changeLocation(userLocation);
+
+//
+                                          },
+                                          color: Colors.blue,
+                                          child: Text("Get Location", style: TextStyle(color: Colors.white),),
+                                        ),
+                                      ),
+                                    ],
+
+                                  )
+
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.grey[500]))),
+                                  child: Text(
+                                    userLocation,
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  )
+                                ),
                               ],
                             ),
-                          )),
+                          ),
+                      ),
                       SizedBox(
                         height: 10,
                       ),

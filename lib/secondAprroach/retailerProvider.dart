@@ -13,6 +13,7 @@ class RetailerProvider with ChangeNotifier {
   String _gst;
   String _address;
   String _retailerId;
+  String _location;
   var uuid = Uuid();
 
   //Getters
@@ -20,6 +21,7 @@ class RetailerProvider with ChangeNotifier {
   String get phone => _phone;
   String get gst => _gst;
   String get address => _address;
+  String get location => _location;
 
 
 
@@ -42,6 +44,10 @@ class RetailerProvider with ChangeNotifier {
     _address = value;
     notifyListeners();
   }
+  changeLocation(String value) {
+    _location = value;
+    notifyListeners();
+  }
 
 
   loadValues(Retailer retailer){
@@ -50,6 +56,7 @@ class RetailerProvider with ChangeNotifier {
     _gst=retailer.gst;
     _address=retailer.address;
     _retailerId=retailer.retailerId;
+    _location=retailer.location;
 
   }
 
@@ -57,12 +64,12 @@ class RetailerProvider with ChangeNotifier {
   saveRetailer() {
 
     if (_retailerId == null) {
-      var newRetailer = Retailer(name,phone,gst,address,uuid.v4());
+      var newRetailer = Retailer(name,phone,gst,address,uuid.v4(),location);
       firestoreService.saveRetailer(newRetailer);
     } else {
       //Update
       var updatedRetailer =
-      Retailer(name,phone,gst,address,_retailerId);
+      Retailer(name,phone,gst,address,_retailerId,location);
       firestoreService.saveRetailer(updatedRetailer);
     }
   }

@@ -4,8 +4,10 @@ class Retailer{
   String _gst;
   String _address;
   String _retailerId;
+  String _location;
 
-  Retailer(this._name,this._phone,this._gst,this._address,this._retailerId);
+
+  Retailer(this._name,this._phone,this._gst,this._address,this._retailerId,this._location);
 
   Retailer.map(dynamic obj){
     this._name = obj['name'];
@@ -13,6 +15,8 @@ class Retailer{
     this._gst = obj['gst'];
     this._address = obj['address'];
     this._retailerId = obj['retailedId'];
+    this._location = obj['location'];
+
   }
 
   String get  name=> _name;
@@ -20,6 +24,8 @@ class Retailer{
   String get gst => _gst;
   String get address => _address;
   String get retailerId => _retailerId;
+  String get location => _location;
+
 
   Map<String,dynamic> toMap(){
     var map=new Map<String,dynamic>();
@@ -28,7 +34,9 @@ class Retailer{
     map['gst'] = _gst;
     map['address'] = _address;
     map ['retailerId'] = _retailerId;
-    return map;
+    map ['location'] = _location;
+
+     return map;
   }
 
   Retailer.fromMap(Map<String,dynamic> map){
@@ -37,6 +45,8 @@ class Retailer{
     this._gst = map['gst'];
     this._address = map['address'];
     this._retailerId = map ['retailerId'];
+    this._location = map ['location'];
+
 
   }
 }
