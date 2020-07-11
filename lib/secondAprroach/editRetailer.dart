@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 import 'package:infodeck/animations/FadeAnimation.dart';
 import 'package:infodeck/secondAprroach/packagePage.dart';
 import 'package:infodeck/secondAprroach/retailer.dart';
@@ -10,6 +11,7 @@ class EditRetailer extends StatefulWidget {
   final Retailer retailer;
 
   EditRetailer([this.retailer]);
+  
 
   @override
   _EditRetailerState createState() => _EditRetailerState();
@@ -20,7 +22,9 @@ class _EditRetailerState extends State<EditRetailer> {
   final phoneController = TextEditingController();
   final gstController = TextEditingController();
   final addressController = TextEditingController();
+  String phoneNumber;
   String userLocation='';
+  String notiBtn = 'Notify Retailer';
 
   @override
   void dispose() {
@@ -71,6 +75,7 @@ class _EditRetailerState extends State<EditRetailer> {
 
     Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     List<Placemark> placemark = await Geolocator().placemarkFromCoordinates(position.latitude, position.longitude);
+    print(placemark);
     Placemark placeMark  = placemark[0];
     String name = placeMark.name;
     String subLocality = placeMark.subLocality;
@@ -81,6 +86,7 @@ class _EditRetailerState extends State<EditRetailer> {
     String address = "${name}, ${subLocality}, ${locality}, ${administrativeArea} ${postalCode}, ${country}";
     return address;
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -183,8 +189,10 @@ class _EditRetailerState extends State<EditRetailer> {
                                               color: Colors.grey[500]))),
                                   child: TextField(
                                     controller: phoneController,
-                                    onChanged: (value) =>
-                                        retailerProvider.changePhone(value),
+                                    onChanged: (value) {
+                                      retailerProvider.changePhone(value);
+                                      phoneNumber=value;
+                                    },
                                     decoration: InputDecoration(
                                         hintText: "Retailer Phone",
                                         hintStyle:
@@ -354,6 +362,39 @@ class _EditRetailerState extends State<EditRetailer> {
                                     child: Center(
                                       child: Text(
                                         "View Packages",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ))
+                                  : Container(),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row (
+                        children: <Widget>[
+                          Expanded(
+                            child: FadeAnimation(
+                              1.9,
+                              (widget.retailer == null)
+                                  ? InkWell(
+                                  onTap: () {
+                                    FlutterOpenWhatsapp.sendSingleMessage(phoneNumber, "Your account has been created.").whenComplete(() => notiBtn='Notified.');
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                        BorderRadius.circular(50),
+                                        color: Colors.black),
+                                    child: Center(
+                                      child: Text(
+                                        notiBtn,
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold),

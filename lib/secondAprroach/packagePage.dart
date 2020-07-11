@@ -73,7 +73,7 @@ class _PackagePage extends State<PackagePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("CheckBox in ListView Example"),
+        title: Text("Package List"),
       ),
       body: Container(
         // decoration: BoxDecoration(color: Color.fromRGBO(58, 66, 86, 1.0)),
