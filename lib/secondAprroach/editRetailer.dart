@@ -384,7 +384,7 @@ class _EditRetailerState extends State<EditRetailer> {
                               (widget.retailer == null)
                                   ? InkWell(
                                   onTap: () {
-                                    FlutterOpenWhatsapp.sendSingleMessage(phoneNumber, "Your account has been created.").whenComplete(() => notiBtn='Notified.');
+                                    FlutterOpenWhatsapp.sendSingleMessage(phoneNumber, "Your entry with all details has been created.Thank you.").whenComplete(() => notiBtn='Notified.');
                                   },
                                   child: Container(
                                     height: 50,
