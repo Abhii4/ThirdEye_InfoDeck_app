@@ -143,6 +143,7 @@ class _EditRetailerState extends State<EditRetailer> {
           FlatButton(
             child: Text('Ok'),
             onPressed: () {
+              gstController.text = "";
               Navigator.of(context).pop();
             },
           ),
