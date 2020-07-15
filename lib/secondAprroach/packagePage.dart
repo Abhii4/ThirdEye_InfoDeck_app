@@ -36,8 +36,8 @@ class _PackagePage extends State<PackagePage> {
     items = new List();
     Stream<QuerySnapshot> getPackageList({int offset, int limit}) async* {
       final FirebaseUser user = await FirebaseAuth.instance.currentUser();
-      String retailerID = widget.retailerId();
-      Stream<QuerySnapshot> snapshots = Firestore.instance.collection('users').document(user.uid).collection('retailers').document(retailerID).collection('packages').snapshots();
+      Stream<QuerySnapshot> snapshots = Firestore.instance.collection('users').document(user.uid).collection('assignedpackages').snapshots();
+      print(snapshots);
 
       if (offset != null) {
         snapshots = snapshots.skip(offset);

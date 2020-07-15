@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 import 'package:infodeck/animations/FadeAnimation.dart';
@@ -6,6 +8,7 @@ import 'package:infodeck/secondAprroach/retailer.dart';
 import 'package:infodeck/secondAprroach/retailerProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
 
 class EditRetailer extends StatefulWidget {
   final Retailer retailer;
@@ -25,6 +28,11 @@ class _EditRetailerState extends State<EditRetailer> {
   String phoneNumber;
   String userLocation='';
   String notiBtn = 'Notify Retailer';
+  String token;
+  var gstInfo;
+  String gstNo;
+
+  static const String BASE_URL = 'https://commonapi.mastersindia.co/commonapis/searchgstin';
 
   @override
   void dispose() {
@@ -85,6 +93,102 @@ class _EditRetailerState extends State<EditRetailer> {
     String country = placeMark.country;
     String address = "${name}, ${subLocality}, ${locality}, ${administrativeArea} ${postalCode}, ${country}";
     return address;
+  }
+
+  Future getapiAuth() async {
+    final response = await http.post('https://commonapi.mastersindia.co/oauth/access_token',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      body: jsonEncode(<String, String>{
+          "username": "abhishek46810@gmail.com",
+          "password" : "Abhishek@123",
+          "client_id":"rtlfbXWpJpVpozfOnx",
+          "client_secret":"kfhwzUK60jm7fKr2ExUNoHF4",
+          "grant_type":"password"
+        }),
+    );
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['access_token'];
+
+    }
+  }
+
+   Future verifyGst() async {
+
+    await getapiAuth().then((value) => token =value);
+    print(token);
+    final response = await http.get('${BASE_URL}?gstin=${gstNo}',
+        headers: {
+      'Authorization': 'Bearer ${token}',
+          'client_id': 'rtlfbXWpJpVpozfOnx'
+    });
+    if (response.statusCode == 200) {
+      print(response.body);
+      return json.decode(response.body);
+
+    } else {
+      return null;
+    }
+  }
+
+  void NotVerfiedDialog() {
+    showDialog(
+        context: context,barrierDismissible: false,
+        builder: (BuildContext context) {
+          return new AlertDialog(
+        title: Text('NOT VERIFIED'),
+        content: const Text('Invalid GST number!'),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Ok'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    });
+    }
+
+  void VerfiedDialog() {
+     showDialog(
+        context: context,barrierDismissible: false,
+        builder: (BuildContext context) {
+          return new AlertDialog(
+            title: Text(' VERIFIED'),
+            content:
+
+              Container(
+
+                child: Column(
+                    mainAxisSize: MainAxisSize.min,
+
+                    children: <Widget>[
+                      Container(
+                child: Text("Name :"+ gstInfo['data']['lgnm']),
+              ),
+                      SizedBox(height: 10),
+            Container(
+              child: Text("Trade Name :"+ gstInfo['data']['tradeNam']),
+            ),],)
+
+
+
+                ),
+
+
+
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
 
@@ -208,14 +312,18 @@ class _EditRetailerState extends State<EditRetailer> {
                                               color: Colors.grey[500]))),
                                   child: TextField(
                                     controller: gstController,
-                                    onChanged: (value) =>
-                                        retailerProvider.changeGst(value),
+                                    onChanged: (value) {
+                                      retailerProvider.changeGst(value);
+                                      gstNo = value;
+                                    },
                                     decoration: InputDecoration(
                                         hintText: "Retailer GST",
                                         hintStyle:
                                         TextStyle(color: Colors.grey),
                                         border: InputBorder.none),
                                   ),
+
+
                                 ),
                                 Container(
                                   padding: EdgeInsets.all(10),
@@ -277,6 +385,55 @@ class _EditRetailerState extends State<EditRetailer> {
                       ),
                       SizedBox(
                         height: 10,
+                      ),
+                      Row (
+                        children: <Widget>[
+                          Expanded(
+                            child: FadeAnimation(
+                              1.9,
+                              (widget.retailer == null)
+                                  ? InkWell(
+                                  onTap: () async {
+
+
+                                    await verifyGst().then((value) => gstInfo=value);
+                                    print(gstInfo['error']);
+                                    if(gstInfo['error']==false){
+
+                                       VerfiedDialog();
+
+                                    }
+                                    else{
+                                      NotVerfiedDialog();
+
+
+
+                                    }
+//
+
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                        BorderRadius.circular(50),
+                                        color: Colors.black),
+                                    child: Center(
+                                      child: Text(
+                                        'Verify GST',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ))
+                                  : Container(),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 30,
                       ),
                       Row(
                         children: <Widget>[
