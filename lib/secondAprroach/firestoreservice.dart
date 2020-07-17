@@ -39,8 +39,8 @@ class FirestoreService {
 
 
 
-  Future<void> saveRetailer(Retailer retailer)  {
-    currentUser();
+  Future<void> saveRetailer(Retailer retailer)  async {
+    await currentUser();
     return myCollection.document(user.uid).collection('retailers').document(retailer.retailerId).setData(retailer.toMap());
   }
 

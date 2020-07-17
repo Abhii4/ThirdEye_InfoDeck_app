@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,7 @@ class RegPage extends StatefulWidget {
 class _RegPageState extends State<RegPage> {
 
 
-  String email, password;
+  String email, password, name;
 
 
 
@@ -40,6 +41,7 @@ class _RegPageState extends State<RegPage> {
         final newUser = await _firebaseAuth.createUserWithEmailAndPassword(
             email: email, password: password);
         if (newUser != null) {
+          Firestore.instance.collection('users').document(newUser.uid).setData({"email":email, "name": name});
           Navigator.push(context,
             MaterialPageRoute(
                 builder: (context) => RootPage()),
@@ -108,8 +110,30 @@ class _RegPageState extends State<RegPage> {
                       borderRadius: BorderRadius.circular(10.0),
                       color: Colors.transparent,
                     ),
+
                     child: Column(
                       children: <Widget>[
+                        Container(
+                          padding: EdgeInsets.all(10.0),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Colors.grey[100],
+                              ),
+                            ),
+                          ),
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Name",
+                              hintStyle: TextStyle(color: Colors.grey),
+                            ),
+                            validator: EmailFieldValidator.validate,
+                            onChanged: (value) {
+                              name = value;
+                            },
+                          ),
+                        ),
                         Container(
                           padding: EdgeInsets.all(10.0),
                           decoration: BoxDecoration(

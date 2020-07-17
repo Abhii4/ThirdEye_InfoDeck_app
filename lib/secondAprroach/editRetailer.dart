@@ -26,7 +26,7 @@ class _EditRetailerState extends State<EditRetailer> {
   final gstController = TextEditingController();
   final addressController = TextEditingController();
   String phoneNumber;
-  String userLocation='';
+  String userLocation='Not Available';
   String notiBtn = 'Notify Retailer';
   String token;
   var gstInfo;
@@ -356,6 +356,7 @@ class _EditRetailerState extends State<EditRetailer> {
                                             print("Location is :" + userLocation);
                                             retailerProvider.changeLocation(userLocation);
 
+
 //
                                           },
                                           color: Colors.blue,
@@ -443,6 +444,7 @@ class _EditRetailerState extends State<EditRetailer> {
                               1.8,
                               InkWell(
                                   onTap: () {
+                                    retailerProvider.changeLocation(userLocation);
                                     retailerProvider.saveRetailer();
                                     Navigator.of(context).pop();
                                   },

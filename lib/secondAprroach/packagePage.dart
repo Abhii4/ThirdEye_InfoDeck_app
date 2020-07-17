@@ -94,7 +94,9 @@ class _PackagePage extends State<PackagePage> {
                     String retailerID = widget.retailerId();
                     print(retailerID);
                     final FirebaseUser user = await FirebaseAuth.instance.currentUser();
-                    Firestore.instance.collection('users').document(user.uid).collection('retailers').document(retailerID).collection('packages').document(items[index].name).updateData({'check' :newValue});
+                    Firestore.instance.collection('users').document(user.uid).collection('assignedpackages').document(items[index].name).updateData({'check' :newValue});
+                    Firestore.instance.collection('users').document(user.uid).collection('retailers').document(retailerID).collection('givenpackages').document(items[index].name).setData({'name':items[index].name,'check' :newValue});
+                    Firestore.instance.collection('users').document(user.uid).collection('assignedpackages').document(items[index].name).delete();
 
                   }); },
                   controlAffinity: ListTileControlAffinity.trailing,  //  <-- leading Checkbox
