@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
             elevation: 8.0,
             margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
             child: Container(
-              decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
+              decoration: BoxDecoration(color: Colors.redAccent),
               child: ListTile(
                 contentPadding:
                 EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage> {
         height: 50,
         items: <Widget>[
           Icon(Icons.event_note,size: 20,color: Colors.black),
-          Icon(Icons.add_circle,size: 50,color: Colors.redAccent),
+          Icon(Icons.add,size: 50,color: Colors.black),
           Icon(Icons.account_box,size: 20,color: Colors.black),
         ],
         animationDuration: Duration(
@@ -133,12 +133,12 @@ class _HomePageState extends State<HomePage> {
     final topAppBar = AppBar(
       automaticallyImplyLeading: false,
       elevation: 0.1,
-      backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
+      backgroundColor: Colors.red,
       title: Text("Retailers"),
     );
 
     return Scaffold(
-      backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
+      backgroundColor: Colors.orangeAccent,
       appBar: topAppBar,
       body: makeBody,
       bottomNavigationBar: makeBottom,

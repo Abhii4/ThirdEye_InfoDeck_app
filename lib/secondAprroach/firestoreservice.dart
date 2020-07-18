@@ -6,17 +6,18 @@ import 'package:infodeck/secondAprroach/retailer.dart';
 
 
 
+
 class FirestoreService {
 
 
   final CollectionReference myCollection = Firestore.instance.collection('users');
   final FirebaseAuth _auth = FirebaseAuth.instance;
-   FirebaseUser user;
+   FirebaseUser CUser;
 
   @override
   Future<FirebaseUser> currentUser() async {
-    user = await FirebaseAuth.instance.currentUser();
-    return user;
+    CUser = await FirebaseAuth.instance.currentUser();
+    return CUser;
   }
 
 
@@ -41,12 +42,14 @@ class FirestoreService {
 
   Future<void> saveRetailer(Retailer retailer)  async {
     await currentUser();
-    return myCollection.document(user.uid).collection('retailers').document(retailer.retailerId).setData(retailer.toMap());
+    return myCollection.document(CUser.uid).collection('retailers').document(retailer.retailerId).setData(retailer.toMap());
   }
+
+
 
   Future<void> removeProduct(String retailerId)  {
     currentUser();
-    return myCollection.document(user.uid).collection('retailers').document(retailerId).delete();
+    return myCollection.document(CUser.uid).collection('retailers').document(retailerId).delete();
   }
 
 

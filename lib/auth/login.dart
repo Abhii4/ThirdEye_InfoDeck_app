@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:infodeck/animations/FadeAnimation.dart';
 import 'package:infodeck/auth/register.dart';
+import 'package:progress_indicators/progress_indicators.dart';
 import 'auth.dart';
 import 'authProvider.dart';
 
@@ -38,6 +40,11 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
 
   String email, password;
+  bool _validate = false;
+  final _email = TextEditingController();
+  final _pass = TextEditingController();
+
+
 
 
 
@@ -47,12 +54,25 @@ class _LoginPageState extends State<LoginPage> {
       final BaseAuth auth = AuthProvider.of(context).auth;
       final String userId = await auth.signInWithEmailAndPassword(email, password);
       print('Signed in: $userId');
-      widget.onSignedIn();
+
+        widget.onSignedIn();
+
+
     } catch (e) {
-      print('Error: $e');
+      Fluttertoast.showToast(
+          msg: "Error: $e",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black12,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
     }
 
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -123,10 +143,12 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           child: TextFormField(
+                            controller: _email,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: "Email",
                               hintStyle: TextStyle(color: Colors.grey),
+                              errorText: _validate ? 'Value Can\'t Be Empty' : null,
                             ),
                             validator: EmailFieldValidator.validate,
                             onChanged: (value) {
@@ -144,11 +166,13 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           child: TextFormField(
+                            controller: _pass,
                             obscureText: true,
                             decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: "Password",
-                                hintStyle: TextStyle(color: Colors.grey)),
+                                hintStyle: TextStyle(color: Colors.grey),
+                              errorText: _validate ? 'Value Can\'t Be Empty' : null,),
                             validator:  PasswordFieldValidator.validate,
                             onChanged: (value) {
                               password = value;
@@ -180,6 +204,10 @@ class _LoginPageState extends State<LoginPage> {
                   1,
                   InkWell(
                     onTap: () {
+                      setState(() {
+                        _email.text.isEmpty ? _validate = true : _validate = false;
+                        _pass.text.isEmpty ? _validate = true : _validate = false;
+                      });
                       login();
                     },
                     child: Container(

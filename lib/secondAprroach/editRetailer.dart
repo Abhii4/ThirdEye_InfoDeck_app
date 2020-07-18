@@ -27,11 +27,12 @@ class _EditRetailerState extends State<EditRetailer> {
   final gstController = TextEditingController();
   final addressController = TextEditingController();
   String phoneNumber;
-  String userLocation='Not Available';
+  String userLocation='';
   String notiBtn = 'Notify Retailer';
   String token;
   var gstInfo;
   String gstNo;
+  bool _validate = false;
 
   static const String BASE_URL = 'https://commonapi.mastersindia.co/commonapis/searchgstin';
 
@@ -154,30 +155,30 @@ class _EditRetailerState extends State<EditRetailer> {
     }
 
   void VerfiedDialog() {
-     showDialog(
+    showDialog(
         context: context,barrierDismissible: false,
         builder: (BuildContext context) {
           return new AlertDialog(
             title: Text(' VERIFIED'),
             content:
 
-              Container(
+            Container(
 
                 child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: MainAxisSize.min,
 
-                    children: <Widget>[
-                      Container(
-                child: Text("Name :"+ gstInfo['data']['lgnm']),
-              ),
-                      SizedBox(height: 10),
-            Container(
-              child: Text("Trade Name :"+ gstInfo['data']['tradeNam']),
-            ),],)
+                  children: <Widget>[
+                    Container(
+                      child: Text("Name :"+ gstInfo['data']['lgnm']),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      child: Text("Trade Name :"+ gstInfo['data']['tradeNam']),
+                    ),],)
 
 
 
-                ),
+            ),
 
 
 
@@ -201,45 +202,15 @@ class _EditRetailerState extends State<EditRetailer> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.orangeAccent,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        elevation: 0.1,
+        backgroundColor: Colors.red,
+        title: Text("Retailer Details"),
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Container(
-            height: 130,
-            child: Stack(
-              children: <Widget>[
-                Positioned(
-                    child: FadeAnimation(
-                      1,
-                      Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage("assets/images/1.png"),
-                          ),
-                        ),
-                      ),
-                    ))
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                FadeAnimation(
-                    1,
-                    Text(
-                      "Edit Retailer Detail",
-                      style: TextStyle(color: Colors.white, fontSize: 30),
-                    )),
-                SizedBox(
-                  height: 10,
-                ),
-              ],
-            ),
-          ),
           SizedBox(height: 20),
           Expanded(
             child: Container(
@@ -284,7 +255,8 @@ class _EditRetailerState extends State<EditRetailer> {
                                         hintText: "Retailer Name",
                                         hintStyle:
                                         TextStyle(color: Colors.grey),
-                                        border: InputBorder.none),
+                                        border: InputBorder.none,
+                                      errorText: _validate ? 'Value Can\'t Be Empty' : null,),
                                   ),
                                 ),
                                 Container(
@@ -303,7 +275,8 @@ class _EditRetailerState extends State<EditRetailer> {
                                         hintText: "Retailer Phone",
                                         hintStyle:
                                         TextStyle(color: Colors.grey),
-                                        border: InputBorder.none),
+                                        border: InputBorder.none,
+                                      errorText: _validate ? 'Value Can\'t Be Empty' : null,),
                                   ),
                                 ),
                                 Container(
@@ -322,7 +295,8 @@ class _EditRetailerState extends State<EditRetailer> {
                                         hintText: "Retailer GST",
                                         hintStyle:
                                         TextStyle(color: Colors.grey),
-                                        border: InputBorder.none),
+                                        border: InputBorder.none,
+                                      errorText: _validate ? 'Value Can\'t Be Empty' : null,),
                                   ),
 
 
@@ -341,7 +315,8 @@ class _EditRetailerState extends State<EditRetailer> {
                                         hintText: "Retailer Address",
                                         hintStyle:
                                         TextStyle(color: Colors.grey),
-                                        border: InputBorder.none),
+                                        border: InputBorder.none,
+                                      errorText: _validate ? 'Value Can\'t Be Empty' : null,),
                                   ),
                                 ),
                                 Container(
@@ -445,9 +420,17 @@ class _EditRetailerState extends State<EditRetailer> {
                               1.8,
                               InkWell(
                                   onTap: () {
-                                    retailerProvider.changeLocation(userLocation);
-                                    retailerProvider.saveRetailer();
-                                    Navigator.of(context).pop();
+                                    setState(() {
+                                      addressController.text.isEmpty ? _validate = true : _validate = false;
+                                      nameController.text.isEmpty ? _validate = true : _validate = false;
+                                      gstController.text.isEmpty ? _validate = true : _validate = false;
+                                      phoneController.text.isEmpty ? _validate = true : _validate = false;
+                                    });
+                                    if(_validate== false){
+                                      retailerProvider.changeLocation(userLocation);
+                                      retailerProvider.saveRetailer();
+                                      Navigator.of(context).pop();
+                                    }
                                   },
                                   child: Container(
                                     height: 50,
@@ -522,7 +505,7 @@ class _EditRetailerState extends State<EditRetailer> {
                                         color: Colors.black),
                                     child: Center(
                                       child: Text(
-                                        "Assign Packages",
+                                        "Available Packages",
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold),

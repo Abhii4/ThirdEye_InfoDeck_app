@@ -4,19 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:infodeck/animations/FadeAnimation.dart';
 import 'package:infodeck/root_page.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:progress_indicators/progress_indicators.dart';
 
 
-class EmailFieldValidator {
-  static String validate(String value) {
-    return value.isEmpty ? 'Email can\'t be empty' : null;
-  }
-}
 
-class PasswordFieldValidator {
-  static String validate(String value) {
-    return value.isEmpty ? 'Password can\'t be empty' : null;
-  }
-}
 
 
 
@@ -31,6 +23,15 @@ class _RegPageState extends State<RegPage> {
 
 
   String email, password, name;
+  bool _validate = false;
+  final _name = TextEditingController();
+  final _email = TextEditingController();
+  final _pass = TextEditingController();
+
+
+
+
+
 
 
 
@@ -38,20 +39,37 @@ class _RegPageState extends State<RegPage> {
       try {
         final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
+
         final newUser = await _firebaseAuth.createUserWithEmailAndPassword(
             email: email, password: password);
-        if (newUser != null) {
-          Firestore.instance.collection('users').document(newUser.uid).setData({"email":email, "name": name});
-          Navigator.push(context,
-            MaterialPageRoute(
-                builder: (context) => RootPage()),
-          );
-        }
+
+
+
+          if (newUser != null) {
+            Firestore.instance.collection('users').document(newUser.uid).setData({"email":email, "name": name});
+            Navigator.push(context,
+              MaterialPageRoute(
+                  builder: (context) => RootPage()),
+            );
+          }
+
+
+
       } catch (e) {
-        print('Error: $e');
+        Fluttertoast.showToast(
+            msg: "Error: $e",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.black12,
+            textColor: Colors.white,
+            fontSize: 16.0
+        );
       }
 
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -123,12 +141,14 @@ class _RegPageState extends State<RegPage> {
                             ),
                           ),
                           child: TextFormField(
+                            controller: _name,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: "Name",
                               hintStyle: TextStyle(color: Colors.grey),
+                              errorText: _validate ? 'Value Can\'t Be Empty' : null,
                             ),
-                            validator: EmailFieldValidator.validate,
+
                             onChanged: (value) {
                               name = value;
                             },
@@ -144,12 +164,14 @@ class _RegPageState extends State<RegPage> {
                             ),
                           ),
                           child: TextFormField(
+                            controller: _email,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: "Email",
                               hintStyle: TextStyle(color: Colors.grey),
+                              errorText: _validate ? 'Value Can\'t Be Empty' : null,
                             ),
-                            validator: EmailFieldValidator.validate,
+
                             onChanged: (value) {
                               email = value;
                             },
@@ -165,12 +187,15 @@ class _RegPageState extends State<RegPage> {
                             ),
                           ),
                           child: TextFormField(
+                            controller: _pass,
                             obscureText: true,
                             decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: "Password",
-                                hintStyle: TextStyle(color: Colors.grey)),
-                            validator: PasswordFieldValidator.validate,
+                                hintStyle: TextStyle(color: Colors.grey),
+                              errorText: _validate ? 'Value Can\'t Be Empty' : null,
+                            ),
+
                             onChanged: (value) {
                               password = value;
                             },
@@ -187,6 +212,11 @@ class _RegPageState extends State<RegPage> {
                   1,
                   InkWell(
                     onTap: () {
+                      setState(() {
+                        _name.text.isEmpty ? _validate = true : _validate = false;
+                        _email.text.isEmpty ? _validate = true : _validate = false;
+                        _pass.text.isEmpty ? _validate = true : _validate = false;
+                      });
                       register();
                     },
                     child: Container(
@@ -212,6 +242,7 @@ class _RegPageState extends State<RegPage> {
                   1,
                   InkWell(
                     onTap: () {
+
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => RootPage()));
                     },

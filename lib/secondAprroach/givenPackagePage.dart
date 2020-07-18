@@ -73,8 +73,12 @@ class _GivenPackagePage extends State<GivenPackagePage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
+      backgroundColor: Colors.orangeAccent,
       appBar: AppBar(
-        title: Text("Given Packages List"),
+        automaticallyImplyLeading: false,
+        elevation: 0.1,
+        backgroundColor: Colors.red,
+        title: Text("Packages Given"),
       ),
       body: Container(
         // decoration: BoxDecoration(color: Color.fromRGBO(58, 66, 86, 1.0)),
@@ -87,7 +91,7 @@ class _GivenPackagePage extends State<GivenPackagePage> {
               elevation: 8.0,
               margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
               child: Container(
-                  decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
+                  decoration: BoxDecoration(color: Colors.lightBlueAccent),
                   child: CheckboxListTile(
                     title: Text(items[index].name),
                     value: items[index].check,
