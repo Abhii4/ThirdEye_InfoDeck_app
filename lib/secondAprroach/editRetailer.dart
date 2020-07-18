@@ -15,13 +15,13 @@ class EditRetailer extends StatefulWidget {
   final Retailer retailer;
 
   EditRetailer([this.retailer]);
-  
+
 
   @override
   _EditRetailerState createState() => _EditRetailerState();
 }
 
-class _EditRetailerState extends State<EditRetailer> {
+class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderStateMixin{
   final nameController = TextEditingController();
   final phoneController = TextEditingController();
   final gstController = TextEditingController();
@@ -33,11 +33,15 @@ class _EditRetailerState extends State<EditRetailer> {
   var gstInfo;
   String gstNo;
   bool _validate = false;
+  bool _status = true;
+
+  final FocusNode myFocusNode = FocusNode();
 
   static const String BASE_URL = 'https://commonapi.mastersindia.co/commonapis/searchgstin';
 
   @override
   void dispose() {
+    myFocusNode.dispose();
     nameController.dispose();
     phoneController.dispose();
     gstController.dispose();
@@ -99,16 +103,16 @@ class _EditRetailerState extends State<EditRetailer> {
 
   Future getapiAuth() async {
     final response = await http.post('https://commonapi.mastersindia.co/oauth/access_token',
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
       body: jsonEncode(<String, String>{
-          "username": "abhishek46810@gmail.com",
-          "password" : "Abhishek@123",
-          "client_id":"rtlfbXWpJpVpozfOnx",
-          "client_secret":"kfhwzUK60jm7fKr2ExUNoHF4",
-          "grant_type":"password"
-        }),
+        "username": "abhishek46810@gmail.com",
+        "password" : "Abhishek@123",
+        "client_id":"rtlfbXWpJpVpozfOnx",
+        "client_secret":"kfhwzUK60jm7fKr2ExUNoHF4",
+        "grant_type":"password"
+      }),
     );
     if (response.statusCode == 200) {
       return json.decode(response.body)['access_token'];
@@ -116,15 +120,15 @@ class _EditRetailerState extends State<EditRetailer> {
     }
   }
 
-   Future verifyGst() async {
+  Future verifyGst() async {
 
     await getapiAuth().then((value) => token =value);
     print(token);
     final response = await http.get('${BASE_URL}?gstin=${gstNo}',
         headers: {
-      'Authorization': 'Bearer ${token}',
+          'Authorization': 'Bearer ${token}',
           'client_id': 'rtlfbXWpJpVpozfOnx'
-    });
+        });
     if (response.statusCode == 200) {
       print(response.body);
       return json.decode(response.body);
@@ -139,20 +143,20 @@ class _EditRetailerState extends State<EditRetailer> {
         context: context,barrierDismissible: false,
         builder: (BuildContext context) {
           return new AlertDialog(
-        title: Text('NOT VERIFIED'),
-        content: const Text('Invalid GST number!'),
-        actions: <Widget>[
-          FlatButton(
-            child: Text('Ok'),
-            onPressed: () {
-              gstController.text = "";
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      );
-    });
-    }
+            title: Text('NOT VERIFIED'),
+            content: const Text('Invalid GST number!'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () {
+                  gstController.text = "";
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
 
   void VerfiedDialog() {
     showDialog(
@@ -195,6 +199,60 @@ class _EditRetailerState extends State<EditRetailer> {
   }
 
 
+
+
+  Widget _getActionButtons() {
+    return Padding(
+      padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
+      child: new Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(right: 10.0),
+              child: Container(
+                  child: new RaisedButton(
+                    child: new Text("Save"),
+                    textColor: Colors.white,
+                    color: Colors.green,
+                    onPressed: () {
+                      setState(() {
+                        _status = true;
+                        FocusScope.of(context).requestFocus(new FocusNode());
+                      });
+                    },
+                    shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(20.0)),
+                  )),
+            ),
+            flex: 2,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _getEditIcon() {
+    return new GestureDetector(
+      child: new CircleAvatar(
+        backgroundColor: Colors.red,
+        radius: 14.0,
+        child: new Icon(
+          Icons.edit,
+          color: Colors.white,
+          size: 16.0,
+        ),
+      ),
+      onTap: () {
+        setState(() {
+          _status = false;
+        });
+      },
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final retailerProvider = Provider.of<RetailerProvider>(context);
@@ -206,395 +264,525 @@ class _EditRetailerState extends State<EditRetailer> {
         automaticallyImplyLeading: false,
         elevation: 0.1,
         backgroundColor: Colors.red,
-        title: Text("Retailer Details"),
+        title: Text("Details"), centerTitle: true
+
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(height: 20),
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
+      body: Container(
+        color: Colors.white,
+        child: new ListView(
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                new Container(
+                  height: 25.0,
+                  color: Colors.orangeAccent,
+                ),
+                new Container(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(50),
-                      topRight: Radius.circular(50))),
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: 20,
-                      ),
-                      FadeAnimation(
-                          1.4,
-                          Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Color.fromRGBO(225, 95, 27, .3),
-                                      blurRadius: 20,
-                                      offset: Offset(0, 10))
-                                ]),
-                            child: Column(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 25.0),
+                    child: new Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                            padding: EdgeInsets.only(
+                                left: 25.0, right: 25.0, top: 25.0),
+                            child: new Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisSize: MainAxisSize.max,
                               children: <Widget>[
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                      border: Border(
-                                          bottom: BorderSide(
-                                              color: Colors.grey[500]))),
-                                  child: TextField(
+                                new Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    new Text(
+                                      'Retailer Information',
+                                      style: TextStyle(
+                                          fontSize: 24.0,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                                new Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    _status ? _getEditIcon() : new Container(),
+                                  ],
+                                )
+                              ],
+                            )),
+                        Padding(
+                            padding: EdgeInsets.only(
+                                left: 25.0, right: 25.0, top: 25.0),
+                            child: new Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                new Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    new Text(
+                                      'Retailer Name',
+                                      style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            )),
+                        Padding(
+                            padding: EdgeInsets.only(
+                                left: 25.0, right: 25.0, top: 2.0),
+                            child: new Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                new Flexible(
+                                  child: new TextField(
                                     controller: nameController,
-                                    onChanged: (value) =>
-                                        retailerProvider.changeName(value),
-                                    decoration: InputDecoration(
-                                        hintText: "Retailer Name",
-                                        hintStyle:
-                                        TextStyle(color: Colors.grey),
-                                        border: InputBorder.none,
-                                      errorText: _validate ? 'Value Can\'t Be Empty' : null,),
+                                    onChanged: (value) async {
+                                      retailerProvider.changeName(value);
+                                    },
+                                    decoration:  InputDecoration(
+                                      hintText: "Enter Retailer's Name",
+                                      errorText: _validate ? 'Value Can\'t Be Empty' : null,
+                                    ),
+                                    enabled: !_status,
+                                    autofocus: !_status,
+
                                   ),
                                 ),
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                      border: Border(
-                                          bottom: BorderSide(
-                                              color: Colors.grey[500]))),
-                                  child: TextField(
+                              ],
+                            )),
+                        Padding(
+                            padding: EdgeInsets.only(
+                                left: 25.0, right: 25.0, top: 25.0),
+                            child: new Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                new Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    new Text(
+                                      'Mobile',
+                                      style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            )),
+                        Padding(
+                            padding: EdgeInsets.only(
+                                left: 25.0, right: 25.0, top: 2.0),
+                            child: new Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                new Flexible(
+                                  child: new TextField(
                                     controller: phoneController,
-                                    onChanged: (value) {
+                                    onChanged: (value) async {
                                       retailerProvider.changePhone(value);
                                       phoneNumber=value;
                                     },
-                                    decoration: InputDecoration(
-                                        hintText: "Retailer Phone",
-                                        hintStyle:
-                                        TextStyle(color: Colors.grey),
-                                        border: InputBorder.none,
-                                      errorText: _validate ? 'Value Can\'t Be Empty' : null,),
+                                    decoration:  InputDecoration(
+                                      hintText: "Enter Retailer's Mobile",
+                                      errorText: _validate ? 'Value Can\'t Be Empty' : null,
+                                    ),
+                                    enabled: !_status,
+                                    autofocus: !_status,
+
                                   ),
                                 ),
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                      border: Border(
-                                          bottom: BorderSide(
-                                              color: Colors.grey[500]))),
-                                  child: TextField(
+                              ],
+                            )),
+                        Padding(
+                            padding: EdgeInsets.only(
+                                left: 25.0, right: 25.0, top: 25.0),
+                            child: new Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                new Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    new Text(
+                                      'GST Number',
+                                      style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            )),
+                        Padding(
+                            padding: EdgeInsets.only(
+                                left: 25.0, right: 25.0, top: 2.0),
+                            child: new Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                new Flexible(
+                                  child: new TextField(
                                     controller: gstController,
-                                    onChanged: (value) {
+                                    onChanged: (value) async {
                                       retailerProvider.changeGst(value);
                                       gstNo = value;
                                     },
-                                    decoration: InputDecoration(
-                                        hintText: "Retailer GST",
-                                        hintStyle:
-                                        TextStyle(color: Colors.grey),
-                                        border: InputBorder.none,
+                                    decoration:  InputDecoration(
+                                      hintText: "Enter GST number",
                                       errorText: _validate ? 'Value Can\'t Be Empty' : null,),
+                                    enabled: !_status,
                                   ),
-
-
                                 ),
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                      border: Border(
-                                          bottom: BorderSide(
-                                              color: Colors.grey[500]))),
-                                  child: TextField(
+                              ],
+                            )),
+                        Padding(
+                            padding: EdgeInsets.only(
+                                left: 25.0, right: 25.0, top: 25.0),
+                            child: new Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                new Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    new Text(
+                                      'Address',
+                                      style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            )),
+                        Padding(
+                            padding: EdgeInsets.only(
+                                left: 25.0, right: 25.0, top: 2.0),
+                            child: new Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                new Flexible(
+                                  child: new TextField(
                                     controller: addressController,
-                                    onChanged: (value) =>
-                                        retailerProvider.changeAddress(value),
-                                    decoration: InputDecoration(
-                                        hintText: "Retailer Address",
-                                        hintStyle:
-                                        TextStyle(color: Colors.grey),
-                                        border: InputBorder.none,
+                                    onChanged: (value) async {
+                                      retailerProvider.changeAddress(value);
+                                    },
+                                    decoration:  InputDecoration(
+                                      hintText: "Enter Retailer's Address ",
                                       errorText: _validate ? 'Value Can\'t Be Empty' : null,),
+                                    enabled: !_status,
                                   ),
                                 ),
-                                Container(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: RaisedButton(
-                                          onPressed: () async {
-                                            userLocation = await getLocation();
-                                            print("Location is :" + userLocation);
-                                            retailerProvider.changeLocation(userLocation);
-
-
-//
-                                          },
-                                          color: Colors.blue,
-                                          child: Text("Get Location", style: TextStyle(color: Colors.white),),
-                                        ),
-                                      ),
-                                    ],
-
-                                  )
-
+                              ],
+                            )),
+                        Padding(
+                            padding: EdgeInsets.only(
+                                left: 25.0, right: 25.0, top: 25.0),
+                            child: new Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                new Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    new Text(
+                                      'Current Address :',
+                                      style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
                                 ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
-                                  decoration: BoxDecoration(
-                                      border: Border(
-                                          bottom: BorderSide(
-                                              color: Colors.grey[500]))),
-                                  child: Text(
+                              ],
+                            )),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: 25.0, right: 25.0, top: 20.0),
+                          child: new Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              new Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  new Text(
                                     userLocation,
                                     textAlign: TextAlign.center,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(fontWeight: FontWeight.bold),
                                   )
-                                ),
-                              ],
-                            ),
-                          ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row (
-                        children: <Widget>[
-                          Expanded(
-                            child: FadeAnimation(
-                              1.9,
-                              (widget.retailer == null)
-                                  ? InkWell(
-                                  onTap: () async {
+                                ],
+                              ),
 
+                            ],
 
-                                    await verifyGst().then((value) => gstInfo=value);
-                                    print(gstInfo['error']);
-                                    if(gstInfo['error']==false){
+                          ),),
+                    Padding(
+                        padding: EdgeInsets.only(
+                            left: 150.0, right: 25.0, top: 20),
 
-                                       VerfiedDialog();
+                      child: (widget.retailer == null)
+                          ?Container(
 
-                                    }
-                                    else{
-                                      NotVerfiedDialog();
+                        child: RaisedButton(
+                          onPressed: () async {
+                            userLocation = await getLocation();
+                            print("Location is :" + userLocation);
+                            retailerProvider.changeLocation(userLocation);},
+                          color: Colors.lightBlue,
+                          child: Text("Get Location", style: TextStyle(color: Colors.white),),
+                        ),
 
+                      ) : Container()
 
+      ),
+                        !_status ? _getActionButtons() : new Container(),
+                      ],
 
-                                    }
-//
+                    ),
 
-                                  },
-                                  child: Container(
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                        BorderRadius.circular(50),
-                                        color: Colors.black),
-                                    child: Center(
-                                      child: Text(
-                                        'Verify GST',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ))
-                                  : Container(),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: FadeAnimation(
-                              1.8,
-                              InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      addressController.text.isEmpty ? _validate = true : _validate = false;
-                                      nameController.text.isEmpty ? _validate = true : _validate = false;
-                                      gstController.text.isEmpty ? _validate = true : _validate = false;
-                                      phoneController.text.isEmpty ? _validate = true : _validate = false;
-                                    });
-                                    if(_validate== false){
-                                      retailerProvider.changeLocation(userLocation);
-                                      retailerProvider.saveRetailer();
-                                      Navigator.of(context).pop();
-                                    }
-                                  },
-                                  child: Container(
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color: Colors.black),
-                                    child: Center(
-                                      child: Text(
-                                        "Add",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  )),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 30,
-                          ),
-                          Expanded(
-                            child: FadeAnimation(
-                              1.9,
-                              (widget.retailer != null)
-                                  ? InkWell(
-                                  onTap: () {
-                                    retailerProvider.removeProduct(
-                                        widget.retailer.retailerId);
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Container(
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                        BorderRadius.circular(50),
-                                        color: Colors.black),
-                                    child: Center(
-                                      child: Text(
-                                        "Delete",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ))
-                                  : Container(),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row (
-                        children: <Widget>[
-                          Expanded(
-                            child: FadeAnimation(
-                              1.9,
-                              (widget.retailer != null)
-                                  ? InkWell(
-                                  onTap: () {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) => PackagePage(
-                                          retailerId : _getretailerId
-                                        )));
-                                  },
-                                  child: Container(
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                        BorderRadius.circular(50),
-                                        color: Colors.black),
-                                    child: Center(
-                                      child: Text(
-                                        "Available Packages",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ))
-                                  : Container(),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row (
-                        children: <Widget>[
-                          Expanded(
-                            child: FadeAnimation(
-                              1.9,
-                              (widget.retailer != null)
-                                  ? InkWell(
-                                  onTap: () {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) => GivenPackagePage(
-                                            retailerId : _getretailerId
-                                        )));
-                                  },
-                                  child: Container(
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                        BorderRadius.circular(50),
-                                        color: Colors.black),
-                                    child: Center(
-                                      child: Text(
-                                        "View Assigned Packages",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ))
-                                  : Container(),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row (
-                        children: <Widget>[
-                          Expanded(
-                            child: FadeAnimation(
-                              1.9,
-                              (widget.retailer == null)
-                                  ? InkWell(
-                                  onTap: () {
-                                    FlutterOpenWhatsapp.sendSingleMessage(phoneNumber, "Your entry with all details has been created.Thank you.").whenComplete(() => notiBtn='Notified.');
-                                  },
-                                  child: Container(
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                        BorderRadius.circular(50),
-                                        color: Colors.black),
-                                    child: Center(
-                                      child: Text(
-                                        notiBtn,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ))
-                                  : Container(),
-                            ),
-                          ),
-                        ],
-                      )
-
-                    ],
                   ),
                 ),
-              ),
+                SizedBox(
+                  height: 5,
+                ),
+                Row (
+                  children: <Widget>[
+                    Expanded(
+                      child: FadeAnimation(
+                        1.9,
+                        (widget.retailer == null)
+                            ? InkWell(
+                            onTap: () async {
+
+
+                              await verifyGst().then((value) => gstInfo=value);
+                              print(gstInfo['error']);
+                              if(gstInfo['error']==false){
+
+                                VerfiedDialog();
+
+                              }
+                              else{
+                                NotVerfiedDialog();
+
+
+
+                              }
+//
+
+                            },
+                            child: Container(
+                              height: 50,
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                  BorderRadius.circular(50),
+                                  color: Colors.black),
+                              child: Center(
+                                child: Text(
+                                  'Verify GST',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ))
+                            : Container(),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: FadeAnimation(
+                        1.8,
+                        InkWell(
+                            onTap: () {
+                              setState(() {
+                                addressController.text.isEmpty ? _validate = true : _validate = false;
+                                nameController.text.isEmpty ? _validate = true : _validate = false;
+                                gstController.text.isEmpty ? _validate = true : _validate = false;
+                                phoneController.text.isEmpty ? _validate = true : _validate = false;
+                              });
+                              if(_validate== false){
+                                retailerProvider.changeLocation(userLocation);
+                                retailerProvider.saveRetailer();
+                                Navigator.of(context).pop();
+                              }
+                            },
+                            child: Container(
+                              height: 50,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: Colors.black),
+                              child: Center(
+                                child: Text(
+                                  "Add",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            )),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 30,
+                    ),
+                    Expanded(
+                      child: FadeAnimation(
+                        1.9,
+                        (widget.retailer != null)
+                            ? InkWell(
+                            onTap: () {
+                              retailerProvider.removeProduct(
+                                  widget.retailer.retailerId);
+                              Navigator.of(context).pop();
+                            },
+                            child: Container(
+                              height: 50,
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                  BorderRadius.circular(50),
+                                  color: Colors.black),
+                              child: Center(
+                                child: Text(
+                                  "Delete",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ))
+                            : Container(),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row (
+                  children: <Widget>[
+                    Expanded(
+                      child: FadeAnimation(
+                        1.9,
+                        (widget.retailer != null)
+                            ? InkWell(
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => PackagePage(
+                                      retailerId : _getretailerId
+                                  )));
+                            },
+                            child: Container(
+                              height: 50,
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                  BorderRadius.circular(50),
+                                  color: Colors.black),
+                              child: Center(
+                                child: Text(
+                                  "Available Packages",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ))
+                            : Container(),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row (
+                  children: <Widget>[
+                    Expanded(
+                      child: FadeAnimation(
+                        1.9,
+                        (widget.retailer != null)
+                            ? InkWell(
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => GivenPackagePage(
+                                      retailerId : _getretailerId
+                                  )));
+                            },
+                            child: Container(
+                              height: 50,
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                  BorderRadius.circular(50),
+                                  color: Colors.black),
+                              child: Center(
+                                child: Text(
+                                  "View Assigned Packages",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ))
+                            : Container(),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row (
+                  children: <Widget>[
+                    Expanded(
+                      child: FadeAnimation(
+                        1.9,
+                        (widget.retailer == null)
+                            ? InkWell(
+                            onTap: () {
+                              FlutterOpenWhatsapp.sendSingleMessage(phoneNumber, "Your entry with all details has been created.Thank you.").whenComplete(() => notiBtn='Notified.');
+                            },
+                            child: Container(
+                              height: 50,
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                  BorderRadius.circular(50),
+                                  color: Colors.black),
+                              child: Center(
+                                child: Text(
+                                  notiBtn,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ))
+                            : Container(),
+                      ),
+                    ),
+                  ],
+                ),
+
+              ],
             ),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }
+
+
 }

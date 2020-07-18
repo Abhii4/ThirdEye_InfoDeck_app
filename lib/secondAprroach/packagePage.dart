@@ -78,6 +78,7 @@ class _PackagePage extends State<PackagePage> {
         elevation: 0.1,
         backgroundColor: Colors.red,
         title: Text("Available Packages"),
+          centerTitle: true
       ),
       body: Container(
         // decoration: BoxDecoration(color: Color.fromRGBO(58, 66, 86, 1.0)),

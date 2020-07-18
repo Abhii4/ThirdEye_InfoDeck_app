@@ -79,6 +79,7 @@ class _GivenPackagePage extends State<GivenPackagePage> {
         elevation: 0.1,
         backgroundColor: Colors.red,
         title: Text("Packages Given"),
+          centerTitle: true
       ),
       body: Container(
         // decoration: BoxDecoration(color: Color.fromRGBO(58, 66, 86, 1.0)),

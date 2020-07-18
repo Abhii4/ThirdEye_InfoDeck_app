@@ -179,7 +179,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
             children: <Widget>[
               new Container(
                 height: 250.0,
-                color: Colors.orangeAccent,
+                color: Colors.redAccent,
                 child: new Column(
                   children: <Widget>[
                     Padding(
@@ -208,7 +208,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 new CircleAvatar(
-                                  backgroundColor: Colors.red,
+                                  backgroundColor: Colors.black,
                                   radius: 25.0,
                                   child: new Icon(
                                     Icons.camera_alt,
@@ -223,7 +223,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                 ),
               ),
               new Container(
-                color: Color(0xffFFFFFF),
+                color: Colors.orangeAccent,
                 child: Padding(
                   padding: EdgeInsets.only(bottom: 25.0),
                   child: new Column(
@@ -467,6 +467,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
       elevation: 0.1,
       backgroundColor: Colors.red,
       title: Text("Profile"),
+        centerTitle: true,
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.exit_to_app, color: Colors.white),
@@ -480,7 +481,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
     );
 
     return  Scaffold(
-      backgroundColor: Colors.orangeAccent,
+      backgroundColor: Colors.white,
       appBar: topAppBar,
       body: makeBody,
       bottomNavigationBar: makeBottom,

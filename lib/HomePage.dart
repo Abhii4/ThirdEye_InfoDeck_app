@@ -135,6 +135,7 @@ class _HomePageState extends State<HomePage> {
       elevation: 0.1,
       backgroundColor: Colors.red,
       title: Text("Retailers"),
+        centerTitle: true
     );
 
     return Scaffold(
