@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 import 'package:infodeck/animations/FadeAnimation.dart';
+import 'package:infodeck/secondAprroach/givenPackagePage.dart';
 import 'package:infodeck/secondAprroach/packagePage.dart';
 import 'package:infodeck/secondAprroach/retailer.dart';
 import 'package:infodeck/secondAprroach/retailerProvider.dart';
@@ -521,7 +522,43 @@ class _EditRetailerState extends State<EditRetailer> {
                                         color: Colors.black),
                                     child: Center(
                                       child: Text(
-                                        "View Packages",
+                                        "Assign Packages",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ))
+                                  : Container(),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row (
+                        children: <Widget>[
+                          Expanded(
+                            child: FadeAnimation(
+                              1.9,
+                              (widget.retailer != null)
+                                  ? InkWell(
+                                  onTap: () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) => GivenPackagePage(
+                                            retailerId : _getretailerId
+                                        )));
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                        BorderRadius.circular(50),
+                                        color: Colors.black),
+                                    child: Center(
+                                      child: Text(
+                                        "View Assigned Packages",
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold),
