@@ -54,7 +54,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
   Future getData() async {
     final FirebaseUser CUser = await FirebaseAuth.instance.currentUser();
 
-    final DocumentReference document =   await Firestore.instance.collection('users').document('bRVpfZPgXGUHyonu5n2tvhnqYpi2');
+    final DocumentReference document =   await Firestore.instance.collection('users').document(CUser.uid);
 
     await document.get().then((snapshot) async{
       print(snapshot['email'].toString());
