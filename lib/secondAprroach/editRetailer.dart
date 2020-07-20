@@ -84,6 +84,10 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
     String retailerId = widget.retailer.retailerId;
     return retailerId;
   }
+  _getretailerName(){
+    String retailerName = widget.retailer.name;
+    return retailerName;
+  }
 
   getLocation() async {
 
@@ -697,7 +701,8 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                             onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) => PackagePage(
-                                      retailerId : _getretailerId
+                                      retailerId : _getretailerId,
+                                      retailerName : _getretailerName
                                   )));
                             },
                             child: Container(
@@ -708,7 +713,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                                   color: Colors.black),
                               child: Center(
                                 child: Text(
-                                  "Available Packages",
+                                  "View Available Packages",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),

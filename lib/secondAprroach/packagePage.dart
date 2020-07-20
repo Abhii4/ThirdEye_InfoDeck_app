@@ -11,8 +11,9 @@ import 'package:infodeck/secondAprroach/package.dart';
 
 
 class PackagePage extends StatefulWidget {
-  PackagePage({this.retailerId});
+  PackagePage({this.retailerId,this.retailerName});
   final  retailerId;
+  final retailerName;
 
 
 
@@ -104,9 +105,10 @@ class _PackagePage extends State<PackagePage> {
                     Firestore.instance.collection('users').document(user.uid).collection('retailers').document(retailerID).collection('givenpackages').document(items[index].name).setData({'name':items[index].name,'check' :newValue});
                     Firestore.instance.collection('users').document(user.uid).collection('assignedpackages').document(items[index].name).delete();
                     String package = items[index].name;
+                    String retailer = widget.retailerName();
                     Fluttertoast.showToast(
 
-                        msg: "$package successfully Assigned!",
+                        msg: "$package successfully Assigned to $retailer",
                         toastLength: Toast.LENGTH_LONG,
                         gravity: ToastGravity.BOTTOM,
                         timeInSecForIosWeb: 1,

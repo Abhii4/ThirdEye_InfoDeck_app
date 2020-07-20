@@ -59,6 +59,13 @@ class _RegPageState extends State<RegPage> {
 
           if (newUser != null) {
             Firestore.instance.collection('users').document(newUser.uid).setData({"email":email, "name": name});
+            //hard coded package assigned to every newly created user
+            Firestore.instance.collection('users').document(newUser.uid).collection('assignedpackages').document('package 1').setData({"name":'package 1', "check": false});
+            Firestore.instance.collection('users').document(newUser.uid).collection('assignedpackages').document('package 2').setData({"name":'package 2', "check": false});
+            Firestore.instance.collection('users').document(newUser.uid).collection('assignedpackages').document('package 3').setData({"name":'package 3', "check": false});
+            Firestore.instance.collection('users').document(newUser.uid).collection('assignedpackages').document('package 4').setData({"name":'package 4', "check": false});
+            Firestore.instance.collection('users').document(newUser.uid).collection('assignedpackages').document('package 5').setData({"name":'package 5', "check": false});
+            Firestore.instance.collection('users').document(newUser.uid).collection('assignedpackages').document('package 6').setData({"name":'package 6', "check": false});
             Fluttertoast.showToast(
                 msg: "Login Successful!",
                 toastLength: Toast.LENGTH_LONG,
