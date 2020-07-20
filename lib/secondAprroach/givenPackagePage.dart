@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:infodeck/secondAprroach/package.dart';
 
 
@@ -92,9 +93,9 @@ class _GivenPackagePage extends State<GivenPackagePage> {
               elevation: 8.0,
               margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
               child: Container(
-                  decoration: BoxDecoration(color: Colors.lightBlueAccent),
+                  decoration: BoxDecoration(color: Colors.green),
                   child: CheckboxListTile(
-                    title: Text(items[index].name),
+                    title: Text(items[index].name,style: TextStyle(fontWeight: FontWeight.bold)),
                     value: items[index].check,
                     onChanged: (newValue) { setState(() async {
                       String retailerID = widget.retailerId();
@@ -103,6 +104,17 @@ class _GivenPackagePage extends State<GivenPackagePage> {
                       Firestore.instance.collection('users').document(user.uid).collection('retailers').document(retailerID).collection('givenpackages').document(items[index].name).updateData({'check' :newValue});
                       Firestore.instance.collection('users').document(user.uid).collection('assignedpackages').document(items[index].name).setData({'name':items[index].name,'check' :newValue});
                       Firestore.instance.collection('users').document(user.uid).collection('retailers').document(retailerID).collection('givenpackages').document(items[index].name).delete();
+                      String package = items[index].name;
+                      Fluttertoast.showToast(
+
+                          msg: "$package successfully removed",
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.black12,
+                          textColor: Colors.white,
+                          fontSize: 16.0
+                      );
 
 
                     }); },

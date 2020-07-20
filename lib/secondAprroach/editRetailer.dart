@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:infodeck/animations/FadeAnimation.dart';
 import 'package:infodeck/secondAprroach/givenPackagePage.dart';
 import 'package:infodeck/secondAprroach/packagePage.dart';
@@ -28,7 +29,6 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
   final addressController = TextEditingController();
   String phoneNumber;
   String userLocation='';
-  String notiBtn = 'Notify Retailer';
   String token;
   var gstInfo;
   String gstNo;
@@ -98,6 +98,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
     String postalCode = placeMark.postalCode;
     String country = placeMark.country;
     String address = "${name}, ${subLocality}, ${locality}, ${administrativeArea} ${postalCode}, ${country}";
+
     return address;
   }
 
@@ -534,6 +535,8 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                         child: RaisedButton(
                           onPressed: () async {
                             userLocation = await getLocation();
+
+
                             print("Location is :" + userLocation);
                             retailerProvider.changeLocation(userLocation);},
                           color: Colors.lightBlue,
@@ -561,21 +564,23 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                         (widget.retailer == null)
                             ? InkWell(
                             onTap: () async {
-
-
-                              await verifyGst().then((value) => gstInfo=value);
-                              print(gstInfo['error']);
-                              if(gstInfo['error']==false){
-
-                                VerfiedDialog();
-
-                              }
-                              else{
-                                NotVerfiedDialog();
-
-
-
-                              }
+                              Fluttertoast.showToast(
+                                  msg: "Feature not available right now",
+                                  toastLength: Toast.LENGTH_LONG,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0
+                              );
+//                              await verifyGst().then((value) => gstInfo=value);
+//                              print(gstInfo['error']);
+//                              if(gstInfo['error']==false){
+//                                VerfiedDialog();
+//                              }
+//                              else{
+//                                NotVerfiedDialog();
+//                              }
 //
 
                             },
@@ -619,6 +624,15 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                                 retailerProvider.changeLocation(userLocation);
                                 retailerProvider.saveRetailer();
                                 Navigator.of(context).pop();
+                                Fluttertoast.showToast(
+                                    msg: "Retailer successfully added!",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.black,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0
+                                );
                               }
                             },
                             child: Container(
@@ -744,36 +758,6 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                 ),
                 SizedBox(
                   height: 10,
-                ),
-                Row (
-                  children: <Widget>[
-                    Expanded(
-                      child: FadeAnimation(
-                        1.9,
-                        (widget.retailer == null)
-                            ? InkWell(
-                            onTap: () {
-                              FlutterOpenWhatsapp.sendSingleMessage(phoneNumber, "Your entry with all details has been created.Thank you.").whenComplete(() => notiBtn='Notified.');
-                            },
-                            child: Container(
-                              height: 50,
-                              decoration: BoxDecoration(
-                                  borderRadius:
-                                  BorderRadius.circular(50),
-                                  color: Colors.black),
-                              child: Center(
-                                child: Text(
-                                  notiBtn,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ))
-                            : Container(),
-                      ),
-                    ),
-                  ],
                 ),
 
               ],

@@ -6,6 +6,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 
 import 'package:infodeck/secondAprroach/editRetailer.dart';
@@ -101,6 +102,15 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
       final BaseAuth auth = AuthProvider.of(context).auth;
       await auth.signOut();
       widget.onSignedOut();
+      Fluttertoast.showToast(
+          msg: "Successfully Logged Out",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
     } catch (e) {
       print(e);
     }
@@ -162,6 +172,27 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
         });
       },
     );
+  }
+  DateTime currentBackPressTime;
+
+  Future<bool> onWillPop() {
+    DateTime now = DateTime.now();
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime) > Duration(seconds: 2)) {
+      currentBackPressTime = now;
+      Fluttertoast.showToast(
+
+          msg: "Press back again to exit",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black12,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+      return Future.value(false);
+    }
+    return Future.value(true);
   }
 
 
@@ -337,8 +368,8 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                                   decoration: const InputDecoration(
                                     hintText: "Enter Your Email",
                                   ),
-                                  enabled: !_status,
-                                  autofocus: !_status,
+                                  enabled: false,
+                                  autofocus: false,
 
                                 ),
                               ),
@@ -483,7 +514,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
     return  Scaffold(
       backgroundColor: Colors.white,
       appBar: topAppBar,
-      body: makeBody,
+      body: WillPopScope(child: makeBody, onWillPop: onWillPop),
       bottomNavigationBar: makeBottom,
     );
   }
