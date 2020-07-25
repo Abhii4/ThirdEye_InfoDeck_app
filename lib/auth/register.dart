@@ -154,26 +154,15 @@ class _RegPageState extends State<RegPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.orangeAccent,
+      backgroundColor: Color.fromRGBO(210, 253, 253, 1),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            height: 200,
+            height: 150,
             child: Stack(
               children: <Widget>[
-                Positioned(
-                    child: FadeAnimation(
-                      1,
-                      Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage("assets/images/1.png"),
-                          ),
-                        ),
-                      ),
-                    ))
+
               ],
             ),
           ),
@@ -183,19 +172,8 @@ class _RegPageState extends State<RegPage> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                FadeAnimation(
-                  1,
-                  Text(
-                    "Hello there, \nwelcome",
-                    style: TextStyle(
-                      fontSize: 30,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
                 SizedBox(
                   height: 40,
                 ),
@@ -204,18 +182,33 @@ class _RegPageState extends State<RegPage> {
                   Container(
                     padding: EdgeInsets.all(8.0),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(25.0),
+                      color: Colors.white,
                     ),
+
 
                     child: Column(
                       children: <Widget>[
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          child: Text(
+                            "REGISTER",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 30,
+                              color: Color.fromRGBO(35, 121, 69, 1),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                         Container(
                           padding: EdgeInsets.all(10.0),
                           decoration: BoxDecoration(
                             border: Border(
                               bottom: BorderSide(
-                                color: Colors.grey[100],
+                                color: Colors.grey,
                               ),
                             ),
                           ),
@@ -238,7 +231,7 @@ class _RegPageState extends State<RegPage> {
                           decoration: BoxDecoration(
                             border: Border(
                               bottom: BorderSide(
-                                color: Colors.grey[100],
+                                color: Colors.grey,
                               ),
                             ),
                           ),
@@ -261,7 +254,7 @@ class _RegPageState extends State<RegPage> {
                           decoration: BoxDecoration(
                             border: Border(
                               bottom: BorderSide(
-                                color: Colors.grey[100],
+                                color: Colors.grey,
                               ),
                             ),
                           ),
@@ -279,58 +272,60 @@ class _RegPageState extends State<RegPage> {
                               password = value;
                             },
                           ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                FadeAnimation(
-                  1,
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        _name.text.isEmpty ? _validate = true : _validate = false;
-                        _email.text.isEmpty ? _validate = true : _validate = false;
-                        _pass.text.isEmpty ? _validate = true : _validate = false;
-                      });
-                      register();
-                    },
-                    child: Container(
-                      height: 50,
-                      margin: EdgeInsets.symmetric(horizontal: 60),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color: Color.fromRGBO(49, 39, 79, 1),
-                      ),
-                      child: Center(
-                        child: Text(
-                          "Sign Up",
-                          style: TextStyle(color: Colors.white),
                         ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 25.0,
-                ),
-                FadeAnimation(
-                  1,
-                  InkWell(
-                    onTap: () {
+                        SizedBox(
+                          height: 40,
+                        ),
+                        Container(
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                _name.text.isEmpty ? _validate = true : _validate = false;
+                                _email.text.isEmpty ? _validate = true : _validate = false;
+                                _pass.text.isEmpty ? _validate = true : _validate = false;
+                              });
+                              register();
+                            },
+                            child: Container(
+                              height: 50,
+                              margin: EdgeInsets.symmetric(horizontal: 60),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: Color.fromRGBO(35, 121, 69, 1),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "Sign Up",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ),
 
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => RootPage()));
-                    },
-                    child: new Text(
-                      "Already a Member?",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15
-                      ),
+                        ),
+                        SizedBox(
+                          height: 40,
+                        ),
+                        Container(
+                          child: InkWell(
+                            onTap: () {
+
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => RootPage()));
+                            },
+                            child: new Text(
+                              "Already a Member?",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 15
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 40,
+                        ),
+                      ],
                     ),
                   ),
                 ),

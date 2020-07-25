@@ -210,9 +210,14 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
             children: <Widget>[
               new Container(
                 height: 250.0,
-                color: Colors.redAccent,
+                color: Color.fromRGBO(210, 253, 253, 1),
+
                 child: new Column(
+
                   children: <Widget>[
+                    SizedBox(
+                      height: 20,
+                    ),
                     Padding(
                       padding: EdgeInsets.only(top: 20.0),
                       child: new Stack(fit: StackFit.loose, children: <Widget>[
@@ -254,7 +259,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                 ),
               ),
               new Container(
-                color: Colors.orangeAccent,
+                color: Colors.white,
                 child: Padding(
                   padding: EdgeInsets.only(bottom: 25.0),
                   child: new Column(
@@ -467,9 +472,9 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
     );
 
     final makeBottom = CurvedNavigationBar(
-      color: Colors.white,
-      backgroundColor: Colors.orangeAccent,
-      buttonBackgroundColor: Colors.white,
+      color: Color.fromRGBO(94, 197, 198, 1),
+      backgroundColor: Colors.white,
+      buttonBackgroundColor: Color.fromRGBO(94, 197, 198, 1),
       height: 50,
       items: <Widget>[
         Icon(Icons.event_note,size: 20,color: Colors.black),
@@ -496,7 +501,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
     final topAppBar = AppBar(
       automaticallyImplyLeading: false,
       elevation: 0.1,
-      backgroundColor: Colors.red,
+      backgroundColor: Color.fromRGBO(94, 197, 198, 1),
       title: Text("Profile"),
         centerTitle: true,
       actions: <Widget>[

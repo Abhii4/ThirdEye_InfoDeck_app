@@ -74,11 +74,11 @@ class _GivenPackagePage extends State<GivenPackagePage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      backgroundColor: Colors.orangeAccent,
+      backgroundColor: Color.fromRGBO(210, 253, 253, 1),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         elevation: 0.1,
-        backgroundColor: Colors.red,
+        backgroundColor: Color.fromRGBO(94, 197, 198, 1),
         title: Text("Packages Given"),
           centerTitle: true
       ),

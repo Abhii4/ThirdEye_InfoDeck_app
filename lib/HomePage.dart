@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
             elevation: 8.0,
             margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
             child: Container(
-              decoration: BoxDecoration(color: Colors.redAccent),
+              decoration: BoxDecoration(color: Colors.white),
               child: ListTile(
                 contentPadding:
                 EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
@@ -80,16 +80,16 @@ class _HomePageState extends State<HomePage> {
                       border: new Border(
                           right: new BorderSide(
                               width: 1.0, color: Colors.white24))),
-                  child: Icon(Icons.account_circle, color: Colors.white),
+                  child: Icon(Icons.account_circle, color: Colors.grey,size: 60.0),
                 ),
                 title: Text(
                   items[index].name,
                   style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
+                      color: Color.fromRGBO(94, 197, 198, 1), fontWeight: FontWeight.bold),
                 ),
                 // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
                 trailing: Icon(Icons.keyboard_arrow_right,
-                    color: Colors.white, size: 30.0),
+                    color: Colors.grey, size: 30.0),
                 onTap: () {
                   Navigator.push(
                       context,
@@ -104,9 +104,9 @@ class _HomePageState extends State<HomePage> {
     );
 
       final makeBottom = CurvedNavigationBar(
-        color: Colors.white,
-        backgroundColor: Colors.orangeAccent,
-        buttonBackgroundColor: Colors.white,
+        color: Color.fromRGBO(94, 197, 198, 1),
+        backgroundColor: Color.fromRGBO(210, 253, 253, 1),
+        buttonBackgroundColor: Color.fromRGBO(94, 197, 198, 1),
         height: 50,
         items: <Widget>[
           Icon(Icons.event_note,size: 20,color: Colors.black),
@@ -133,13 +133,16 @@ class _HomePageState extends State<HomePage> {
     final topAppBar = AppBar(
       automaticallyImplyLeading: false,
       elevation: 0.1,
-      backgroundColor: Colors.red,
-      title: Text("Retailers"),
+      backgroundColor: Color.fromRGBO(94, 197, 198, 1),
+      title: Text("Retailers",
+        style: TextStyle(
+          color: Colors.white, fontWeight: FontWeight.bold),),
+
         centerTitle: true
     );
 
     return Scaffold(
-      backgroundColor: Colors.orangeAccent,
+      backgroundColor: Color.fromRGBO(210, 253, 253, 1),
       appBar: topAppBar,
       body: makeBody,
       bottomNavigationBar: makeBottom,

@@ -1,8 +1,6 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
 import 'package:infodeck/animations/FadeAnimation.dart';
 import 'package:infodeck/secondAprroach/givenPackagePage.dart';
 import 'package:infodeck/secondAprroach/packagePage.dart';
@@ -12,16 +10,13 @@ import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 
+
 class EditRetailer extends StatefulWidget {
   final Retailer retailer;
-
   EditRetailer([this.retailer]);
-
-
   @override
   _EditRetailerState createState() => _EditRetailerState();
 }
-
 class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderStateMixin{
   final nameController = TextEditingController();
   final phoneController = TextEditingController();
@@ -34,11 +29,8 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
   String gstNo;
   bool _validate = false;
   bool _status = true;
-
   final FocusNode myFocusNode = FocusNode();
-
   static const String BASE_URL = 'https://commonapi.mastersindia.co/commonapis/searchgstin';
-
   @override
   void dispose() {
     myFocusNode.dispose();
@@ -48,7 +40,6 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
     addressController.dispose();
     super.dispose();
   }
-
   @override
   void initState() {
     if (widget.retailer == null) {
@@ -69,7 +60,6 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
       gstController.text = widget.retailer.gst;
       addressController.text = widget.retailer.address;
       userLocation = widget.retailer.location;
-
       //State Update
       new Future.delayed(Duration.zero, () {
         final retailerProvider =
@@ -77,7 +67,6 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
         retailerProvider.loadValues(widget.retailer);
       });
     }
-
     super.initState();
   }
   _getretailerId(){
@@ -88,9 +77,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
     String retailerName = widget.retailer.name;
     return retailerName;
   }
-
   getLocation() async {
-
     Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     List<Placemark> placemark = await Geolocator().placemarkFromCoordinates(position.latitude, position.longitude);
     print(placemark);
@@ -102,10 +89,8 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
     String postalCode = placeMark.postalCode;
     String country = placeMark.country;
     String address = "${name}, ${subLocality}, ${locality}, ${administrativeArea} ${postalCode}, ${country}";
-
     return address;
   }
-
   Future getapiAuth() async {
     final response = await http.post('https://commonapi.mastersindia.co/oauth/access_token',
       headers: <String, String>{
@@ -121,12 +106,9 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
     );
     if (response.statusCode == 200) {
       return json.decode(response.body)['access_token'];
-
     }
   }
-
   Future verifyGst() async {
-
     await getapiAuth().then((value) => token =value);
     print(token);
     final response = await http.get('${BASE_URL}?gstin=${gstNo}',
@@ -137,12 +119,10 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
     if (response.statusCode == 200) {
       print(response.body);
       return json.decode(response.body);
-
     } else {
       return null;
     }
   }
-
   void NotVerfiedDialog() {
     showDialog(
         context: context,barrierDismissible: false,
@@ -162,7 +142,6 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
           );
         });
   }
-
   void VerfiedDialog() {
     showDialog(
         context: context,barrierDismissible: false,
@@ -170,9 +149,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
           return new AlertDialog(
             title: Text(' VERIFIED'),
             content:
-
             Container(
-
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
 
@@ -184,13 +161,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                     Container(
                       child: Text("Trade Name :"+ gstInfo['data']['tradeNam']),
                     ),],)
-
-
-
             ),
-
-
-
             actions: <Widget>[
               FlatButton(
                 child: Text('Ok'),
@@ -202,10 +173,6 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
           );
         });
   }
-
-
-
-
   Widget _getActionButtons() {
     return Padding(
       padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
@@ -237,7 +204,6 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
       ),
     );
   }
-
   Widget _getEditIcon() {
     return new GestureDetector(
       child: new CircleAvatar(
@@ -264,11 +230,11 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.orangeAccent,
+      backgroundColor: Color.fromRGBO(35, 121, 69, 1),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         elevation: 0.1,
-        backgroundColor: Colors.red,
+        backgroundColor: Color.fromRGBO(94, 197, 198, 1),
         title: Text("Details"), centerTitle: true
 
       ),
@@ -280,7 +246,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
               children: <Widget>[
                 new Container(
                   height: 25.0,
-                  color: Colors.orangeAccent,
+                  color: Color.fromRGBO(35, 121, 69, 1)
                 ),
                 new Container(
                   color: Colors.white,
@@ -510,8 +476,6 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 20.0),
                           child: new Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               new Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -519,6 +483,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                                 children: <Widget>[
                                   new Text(
                                     userLocation,
+                                    maxLines: 3,
                                     textAlign: TextAlign.center,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(fontWeight: FontWeight.bold),
@@ -568,32 +533,37 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                         (widget.retailer == null)
                             ? InkWell(
                             onTap: () async {
-                              Fluttertoast.showToast(
-                                  msg: "Feature not available right now",
-                                  toastLength: Toast.LENGTH_LONG,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.red,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0
-                              );
-//                              await verifyGst().then((value) => gstInfo=value);
-//                              print(gstInfo['error']);
-//                              if(gstInfo['error']==false){
-//                                VerfiedDialog();
-//                              }
-//                              else{
-//                                NotVerfiedDialog();
-//                              }
-//
+//                              Fluttertoast.showToast(
+//                                  msg: "Feature not available right now",
+//                                  toastLength: Toast.LENGTH_LONG,
+//                                  gravity: ToastGravity.BOTTOM,
+//                                  timeInSecForIosWeb: 1,
+//                                  backgroundColor: Colors.red,
+//                                  textColor: Colors.white,
+//                                  fontSize: 16.0
+//                              );
+                              await verifyGst().then((value) => gstInfo=value);
+                              print(gstInfo['error']);
+                              if(gstInfo['error']==false){
+                                VerfiedDialog();
+                              }
+                              else{
+                                NotVerfiedDialog();
+                              }
+
 
                             },
                             child: Container(
+
+                              margin: const EdgeInsets.fromLTRB(100,0,100,0),
+                              padding: const EdgeInsets.all(3.0),
                               height: 50,
+
                               decoration: BoxDecoration(
+
                                   borderRadius:
                                   BorderRadius.circular(50),
-                                  color: Colors.black),
+                                  color: Color.fromRGBO(35, 121, 69, 1)),
                               child: Center(
                                 child: Text(
                                   'Verify GST',
@@ -640,10 +610,12 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                               }
                             },
                             child: Container(
+                              margin: const EdgeInsets.fromLTRB(70,10,45,10),
+                              padding: const EdgeInsets.all(3.0),
                               height: 50,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(50),
-                                  color: Colors.black),
+                                  color: Color.fromRGBO(35, 121, 69, 1)),
                               child: Center(
                                 child: Text(
                                   "Add",
@@ -658,7 +630,10 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                     SizedBox(
                       width: 30,
                     ),
-                    Expanded(
+]    ),
+                    Row(
+                    children: <Widget>[
+                      Expanded(
                       child: FadeAnimation(
                         1.9,
                         (widget.retailer != null)
@@ -669,11 +644,13 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                               Navigator.of(context).pop();
                             },
                             child: Container(
+                              margin: const EdgeInsets.fromLTRB(100,0,100,0),
+                              padding: const EdgeInsets.all(3.0),
                               height: 50,
                               decoration: BoxDecoration(
                                   borderRadius:
                                   BorderRadius.circular(50),
-                                  color: Colors.black),
+                                  color: Color.fromRGBO(35, 121, 69, 1)),
                               child: Center(
                                 child: Text(
                                   "Delete",
@@ -706,11 +683,13 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                                   )));
                             },
                             child: Container(
+                              margin: const EdgeInsets.fromLTRB(100,0,100,0),
+                              padding: const EdgeInsets.all(3.0),
                               height: 50,
                               decoration: BoxDecoration(
                                   borderRadius:
                                   BorderRadius.circular(50),
-                                  color: Colors.black),
+                                  color: Color.fromRGBO(35, 121, 69, 1)),
                               child: Center(
                                 child: Text(
                                   "View Available Packages",
@@ -742,11 +721,13 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                                   )));
                             },
                             child: Container(
+                              margin: const EdgeInsets.fromLTRB(100,0,100,0),
+                              padding: const EdgeInsets.all(3.0),
                               height: 50,
                               decoration: BoxDecoration(
                                   borderRadius:
                                   BorderRadius.circular(50),
-                                  color: Colors.black),
+                                  color: Color.fromRGBO(35, 121, 69, 1)),
                               child: Center(
                                 child: Text(
                                   "View Assigned Packages",
@@ -772,6 +753,4 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
       ),
     );
   }
-
-
 }
