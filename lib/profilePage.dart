@@ -1,20 +1,20 @@
 
-
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
-
+import 'package:image_picker/image_picker.dart';
 import 'package:infodeck/secondAprroach/editRetailer.dart';
-
-
 import 'HomePage.dart';
 import 'auth/auth.dart';
 import 'auth/authProvider.dart';
+import 'package:path/path.dart';
+
 
 class ProfilePage extends StatefulWidget {
 
@@ -36,6 +36,9 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
   final emailController = TextEditingController();
   final addressController = TextEditingController();
 
+  var imageUrl;
+  File _image;
+
 
   bool _status = true;
 
@@ -51,6 +54,29 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
     super.initState();
   }
 
+  Future getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      _image = image;
+      print('Image Path $_image');
+    });
+  }
+
+  Future uploadPic(BuildContext context) async{
+    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    String fileName = basename(_image.path);
+    StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child('profilePics').child(user.uid).child(fileName);
+    StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
+     imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+    setState(() async {
+      print("Profile Picture uploaded");
+
+      Firestore.instance.collection('users').document(user.uid).updateData({'profileUrl' :imageUrl});
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
+    });
+  }
+
 
   Future getData() async {
     final FirebaseUser CUser = await FirebaseAuth.instance.currentUser();
@@ -60,6 +86,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
     await document.get().then((snapshot) async{
       print(snapshot['email'].toString());
       setState(() {
+        imageUrl=snapshot.data['profileUrl'].toString();
 
         if(snapshot.data['name'] != null){
           nameController.text = snapshot.data['name'].toString();
@@ -141,7 +168,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                     onPressed: () {
                       setState(() {
                         _status = true;
-                        FocusScope.of(context).requestFocus(new FocusNode());
+                        FocusScope.of(this.context).requestFocus(new FocusNode());
                       });
                     },
                     shape: new RoundedRectangleBorder(
@@ -230,11 +257,10 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                                 height: 140.0,
                                 decoration: new BoxDecoration(
                                   shape: BoxShape.circle,
-                                  image: new DecorationImage(
-                                    image: new ExactAssetImage(
+                                    image: DecorationImage(image:(imageUrl!=null)? NetworkImage(imageUrl): new ExactAssetImage(
                                         'assets/images/as.png'),
-                                    fit: BoxFit.cover,
-                                  ),
+                                        fit: BoxFit.cover)
+
                                 )),
                           ],
                         ),
@@ -243,13 +269,20 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                             child: new Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                new CircleAvatar(
-                                  backgroundColor: Colors.black,
-                                  radius: 25.0,
-                                  child: new Icon(
-                                    Icons.camera_alt,
-                                    color: Colors.white,
+                                InkWell(
+                                  child: new CircleAvatar(
+                                    backgroundColor: Colors.black,
+                                    radius: 25.0,
+                                    child: new Icon(
+                                      Icons.camera_alt,
+                                      color: Colors.white,
+                                    ),
                                   ),
+                                  onTap: () async {
+
+                                    await getImage();
+                                    uploadPic(context);
+                                  }
                                 )
                               ],
                             )),

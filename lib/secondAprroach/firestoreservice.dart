@@ -38,6 +38,16 @@ class FirestoreService {
 
   Future<void> saveRetailer(Retailer retailer)  async {
     await currentUser();
+    String name;
+    Firestore.instance.collection('retailersList').document(retailer.retailerId).setData(retailer.toMap());
+    Firestore.instance.collection('retailersList').document(retailer.retailerId).updateData({'userId': CUser.uid});
+
+    final DocumentReference document =   await Firestore.instance.collection('users').document(CUser.uid);
+
+    await document.get().then((snapshot) async{
+      name = snapshot.data['name'].toString();
+    });
+    Firestore.instance.collection('retailersList').document(retailer.retailerId).updateData({'userName': name});
     return myCollection.document(CUser.uid).collection('retailers').document(retailer.retailerId).setData(retailer.toMap());
   }
 
