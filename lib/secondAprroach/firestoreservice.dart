@@ -55,6 +55,7 @@ class FirestoreService {
 
   Future<void> removeProduct(String retailerId)  {
     currentUser();
+    Firestore.instance.collection('retailersList').document(retailerId).delete();
     return myCollection.document(CUser.uid).collection('retailers').document(retailerId).delete();
   }
 

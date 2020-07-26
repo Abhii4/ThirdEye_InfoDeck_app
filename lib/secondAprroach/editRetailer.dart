@@ -1,6 +1,10 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:infodeck/animations/FadeAnimation.dart';
 import 'package:infodeck/secondAprroach/givenPackagePage.dart';
 import 'package:infodeck/secondAprroach/packagePage.dart';
@@ -9,6 +13,8 @@ import 'package:infodeck/secondAprroach/retailerProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
+import 'dart:io';
 
 
 class EditRetailer extends StatefulWidget {
@@ -29,6 +35,8 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
   String gstNo;
   bool _validate = false;
   bool _status = true;
+  String imageUrl;
+  File _image=null;
   final FocusNode myFocusNode = FocusNode();
   static const String BASE_URL = 'https://commonapi.mastersindia.co/commonapis/searchgstin';
   @override
@@ -50,8 +58,8 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
       addressController.text = "";
       new Future.delayed(Duration.zero, () {
         final retailerProvider =
-        Provider.of<RetailerProvider>(context, listen: false);
-        retailerProvider.loadValues(Retailer(null, null, null, null,null,null));
+        Provider.of<RetailerProvider>(this.context, listen: false);
+        retailerProvider.loadValues(Retailer(null, null, null, null,null,null,null));
       });
     } else {
       //Controller Update
@@ -60,15 +68,44 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
       gstController.text = widget.retailer.gst;
       addressController.text = widget.retailer.address;
       userLocation = widget.retailer.location;
+      imageUrl = widget.retailer.profileUrl;
       //State Update
       new Future.delayed(Duration.zero, () {
         final retailerProvider =
-        Provider.of<RetailerProvider>(context, listen: false);
+        Provider.of<RetailerProvider>(this.context, listen: false);
         retailerProvider.loadValues(widget.retailer);
       });
     }
     super.initState();
   }
+
+
+
+
+  Future getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      _image = image;
+      print('Image Path $_image');
+    });
+  }
+
+  Future uploadPic(BuildContext context) async{
+
+    String fileName = basename(_image.path);
+    StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child('retailerProfilePics').child(fileName);
+    StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
+    imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+    print(imageUrl);
+    print("Profile Picture uploaded");
+  }
+
+
+
+
+
+
   _getretailerId(){
     String retailerId = widget.retailer.retailerId;
     return retailerId;
@@ -125,7 +162,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
   }
   void NotVerfiedDialog() {
     showDialog(
-        context: context,barrierDismissible: false,
+        context: this.context,barrierDismissible: false,
         builder: (BuildContext context) {
           return new AlertDialog(
             title: Text('NOT VERIFIED'),
@@ -144,7 +181,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
   }
   void VerfiedDialog() {
     showDialog(
-        context: context,barrierDismissible: false,
+        context: this.context,barrierDismissible: false,
         builder: (BuildContext context) {
           return new AlertDialog(
             title: Text(' VERIFIED'),
@@ -191,7 +228,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                     onPressed: () {
                       setState(() {
                         _status = true;
-                        FocusScope.of(context).requestFocus(new FocusNode());
+                        FocusScope.of(this.context).requestFocus(new FocusNode());
                       });
                     },
                     shape: new RoundedRectangleBorder(
@@ -245,8 +282,60 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
             Column(
               children: <Widget>[
                 new Container(
-                  height: 25.0,
-                  color: Color.fromRGBO(35, 121, 69, 1)
+                  height: 250.0,
+                  color: Color.fromRGBO(210, 253, 253, 1),
+
+                  child: new Column(
+
+                    children: <Widget>[
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 20.0),
+                        child: new Stack(fit: StackFit.loose, children: <Widget>[
+                          new Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              new Container(
+                                  width: 140.0,
+                                  height: 140.0,
+                                  decoration: new BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(image:(imageUrl!=null)? NetworkImage(imageUrl):(_image!=null)? FileImage(_image): new ExactAssetImage(
+                                          'assets/images/as.png'),
+                                          fit: BoxFit.cover)
+
+                                  )),
+                            ],
+                          ),
+                          Padding(
+                              padding: EdgeInsets.only(top: 90.0, right: 100.0),
+                              child: new Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  InkWell(
+                                      child: new CircleAvatar(
+                                        backgroundColor: Colors.black,
+                                        radius: 25.0,
+                                        child: new Icon(
+                                          Icons.camera_alt,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      onTap: () async {
+
+                                        await getImage();
+
+                                      }
+                                  )
+                                ],
+                              )),
+                        ]),
+                      )
+                    ],
+                  ),
                 ),
                 new Container(
                   color: Colors.white,
@@ -484,8 +573,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                                   new Text(
                                     userLocation,
                                     maxLines: 3,
-                                    textAlign: TextAlign.center,
-                                    overflow: TextOverflow.ellipsis,
+
                                     style: TextStyle(fontWeight: FontWeight.bold),
                                   )
                                 ],
@@ -587,7 +675,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                       child: FadeAnimation(
                         1.8,
                         InkWell(
-                            onTap: () {
+                            onTap: ()  async {
                               setState(() {
                                 addressController.text.isEmpty ? _validate = true : _validate = false;
                                 nameController.text.isEmpty ? _validate = true : _validate = false;
@@ -596,8 +684,17 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                               });
                               if(_validate== false){
                                 retailerProvider.changeLocation(userLocation);
-                                retailerProvider.saveRetailer();
+                                retailerProvider.changeProfileUrl(imageUrl);
+
+                                if(_image!=null){
+                                  await uploadPic(context);
+                                  print(imageUrl);
+                                  retailerProvider.changeProfileUrl(imageUrl);
+                                }
+                                await retailerProvider.saveRetailer();
+
                                 Navigator.of(context).pop();
+
                                 Fluttertoast.showToast(
                                     msg: "Retailer successfully added!",
                                     toastLength: Toast.LENGTH_LONG,
@@ -618,7 +715,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                                   color: Color.fromRGBO(35, 121, 69, 1)),
                               child: Center(
                                 child: Text(
-                                  "Add",
+                                  "Save",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),

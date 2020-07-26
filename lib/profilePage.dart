@@ -66,7 +66,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
   Future uploadPic(BuildContext context) async{
     final FirebaseUser user = await FirebaseAuth.instance.currentUser();
     String fileName = basename(_image.path);
-    StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child('profilePics').child(user.uid).child(fileName);
+    StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child('userProfilePics').child(fileName);
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
      imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
     setState(() async {
