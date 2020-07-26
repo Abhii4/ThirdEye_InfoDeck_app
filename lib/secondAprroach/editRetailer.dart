@@ -79,9 +79,6 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
     super.initState();
   }
 
-
-
-
   Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
@@ -197,7 +194,63 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                     SizedBox(height: 10),
                     Container(
                       child: Text("Trade Name :"+ gstInfo['data']['tradeNam']),
-                    ),],)
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      child: Text("Legal Name of Business :"+ gstInfo['data']['lgnm']),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      child: Text("State Jurisdiction :"+ gstInfo['data']['stj']),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      child: Text("Date of Registration :"+ gstInfo['data']['rgdt']),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      child: Text("Constitution of Business :"+ gstInfo['data']['ctb']),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      child: Text("Taxpayer type :"+ gstInfo['data']['dty']),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      child: Text("Nature of Business Activity :"+ gstInfo['data']['nba'].toString()),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      child: Text("Trade Name :"+ gstInfo['data']['tradeNam']),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      child: Text("GSTN status :"+ gstInfo['data']['sts']),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      child: Text("Date of Cancellation :"+ gstInfo['data']['cxdt']),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      child: Text("Last Updated Date :"+ gstInfo['data']['lstupdt']),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      child: Text("State Jurisdiction Code :"+ gstInfo['data']['stjCd']),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      child: Text("Centre Jurisdiction Code :"+ gstInfo['data']['ctjCd']),
+                    ),SizedBox(height: 10),
+                    Container(
+                      child: Text("Additional Place of Business Fields :"+ gstInfo['data']['adadr'].toString()),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      child: Text("Additional Place of Bussiness address :"+ gstInfo['data']['pradr']['addr']),
+                    ),
+                  ],)
             ),
             actions: <Widget>[
               FlatButton(
