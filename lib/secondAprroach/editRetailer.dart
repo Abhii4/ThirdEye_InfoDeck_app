@@ -36,6 +36,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
   bool _validate = false;
   bool _status = true;
   String imageUrl;
+  var verifiedIcon;
   File _image=null;
   final FocusNode myFocusNode = FocusNode();
   static const String BASE_URL = 'https://commonapi.mastersindia.co/commonapis/searchgstin';
@@ -154,7 +155,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
       print(response.body);
       return json.decode(response.body);
     } else {
-      return null;
+     return null;
     }
   }
   void NotVerfiedDialog() {
@@ -168,7 +169,6 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
               FlatButton(
                 child: Text('Ok'),
                 onPressed: () {
-                  gstController.text = "";
                   Navigator.of(context).pop();
                 },
               ),
@@ -176,93 +176,96 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
           );
         });
   }
-  void VerfiedDialog() {
-    showDialog(
-        context: this.context,barrierDismissible: false,
-        builder: (BuildContext context) {
-          return new AlertDialog(
-            title: Text(' VERIFIED'),
-            content:
-            Container(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-
-                  children: <Widget>[
-                    Container(
-                      child: Text("Name :"+ gstInfo['data']['lgnm']),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      child: Text("Trade Name :"+ gstInfo['data']['tradeNam']),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      child: Text("Legal Name of Business :"+ gstInfo['data']['lgnm']),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      child: Text("State Jurisdiction :"+ gstInfo['data']['stj']),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      child: Text("Date of Registration :"+ gstInfo['data']['rgdt']),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      child: Text("Constitution of Business :"+ gstInfo['data']['ctb']),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      child: Text("Taxpayer type :"+ gstInfo['data']['dty']),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      child: Text("Nature of Business Activity :"+ gstInfo['data']['nba'].toString()),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      child: Text("Trade Name :"+ gstInfo['data']['tradeNam']),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      child: Text("GSTN status :"+ gstInfo['data']['sts']),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      child: Text("Date of Cancellation :"+ gstInfo['data']['cxdt']),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      child: Text("Last Updated Date :"+ gstInfo['data']['lstupdt']),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      child: Text("State Jurisdiction Code :"+ gstInfo['data']['stjCd']),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      child: Text("Centre Jurisdiction Code :"+ gstInfo['data']['ctjCd']),
-                    ),SizedBox(height: 10),
-                    Container(
-                      child: Text("Additional Place of Business Fields :"+ gstInfo['data']['adadr'].toString()),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      child: Text("Additional Place of Bussiness address :"+ gstInfo['data']['pradr']['addr']),
-                    ),
-                  ],)
-            ),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('Ok'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        });
-  }
+//  void VerfiedDialog() {
+//    showDialog(
+//        context: this.context,barrierDismissible: false,
+//        builder: (BuildContext context) {
+//          return new AlertDialog(
+//            title: Text(' VERIFIED'),
+//            content:
+//            Container(
+//
+//                child: ListView(
+//                  child: Column(
+//                    mainAxisSize: MainAxisSize.min,
+//
+//                    children: <Widget>[
+//                      Container(
+//                        child: Text("Name :"+ gstInfo['data']['lgnm']),
+//                      ),
+//                      SizedBox(height: 10),
+//                      Container(
+//                        child: Text("Trade Name :"+ gstInfo['data']['tradeNam']),
+//                      ),
+//                      SizedBox(height: 10),
+//                      Container(
+//                        child: Text("Legal Name of Business :"+ gstInfo['data']['lgnm']),
+//                      ),
+//                      SizedBox(height: 10),
+//                      Container(
+//                        child: Text("State Jurisdiction :"+ gstInfo['data']['stj']),
+//                      ),
+//                      SizedBox(height: 10),
+//                      Container(
+//                        child: Text("Date of Registration :"+ gstInfo['data']['rgdt']),
+//                      ),
+//                      SizedBox(height: 10),
+//                      Container(
+//                        child: Text("Constitution of Business :"+ gstInfo['data']['ctb']),
+//                      ),
+//                      SizedBox(height: 10),
+//                      Container(
+//                        child: Text("Taxpayer type :"+ gstInfo['data']['dty']),
+//                      ),
+//                      SizedBox(height: 10),
+//                      Container(
+//                        child: Text("Nature of Business Activity :"+ gstInfo['data']['nba'].toString()),
+//                      ),
+//                      SizedBox(height: 10),
+//                      Container(
+//                        child: Text("Trade Name :"+ gstInfo['data']['tradeNam']),
+//                      ),
+//                      SizedBox(height: 10),
+//                      Container(
+//                        child: Text("GSTN status :"+ gstInfo['data']['sts']),
+//                      ),
+//                      SizedBox(height: 10),
+//                      Container(
+//                        child: Text("Date of Cancellation :"+ gstInfo['data']['cxdt']),
+//                      ),
+//                      SizedBox(height: 10),
+//                      Container(
+//                        child: Text("Last Updated Date :"+ gstInfo['data']['lstupdt']),
+//                      ),
+//                      SizedBox(height: 10),
+//                      Container(
+//                        child: Text("State Jurisdiction Code :"+ gstInfo['data']['stjCd']),
+//                      ),
+//                      SizedBox(height: 10),
+//                      Container(
+//                        child: Text("Centre Jurisdiction Code :"+ gstInfo['data']['ctjCd']),
+//                      ),SizedBox(height: 10),
+//                      Container(
+//                        child: Text("Additional Place of Business Fields :"+ gstInfo['data']['adadr'].toString()),
+//                      ),
+//                      SizedBox(height: 10),
+//                      Container(
+//                        child: Text("Additional Place of Bussiness address :"+ gstInfo['data']['pradr']['addr'].toString()),
+//                      ),
+//                    ],),
+//                )
+//            ),
+//            actions: <Widget>[
+//              FlatButton(
+//                child: Text('Ok'),
+//                onPressed: () {
+//                  Navigator.of(context).pop();
+//                },
+//              ),
+//            ],
+//          );
+//        });
+//  }
   Widget _getActionButtons() {
     return Padding(
       padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
@@ -543,12 +546,15 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                                   child: new TextField(
                                     controller: gstController,
                                     onChanged: (value) async {
+                                      verifiedIcon=null;
                                       retailerProvider.changeGst(value);
                                       gstNo = value;
                                     },
                                     decoration:  InputDecoration(
                                       hintText: "Enter GST number",
-                                      errorText: _validate ? 'Value Can\'t Be Empty' : null,),
+                                      errorText: _validate ? 'Value Can\'t Be Empty' : null,
+                                        suffixIcon: verifiedIcon,
+                                      ),
                                     enabled: !_status,
                                   ),
                                 ),
@@ -686,10 +692,17 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                               await verifyGst().then((value) => gstInfo=value);
                               print(gstInfo['error']);
                               if(gstInfo['error']==false){
-                                VerfiedDialog();
+//                                VerfiedDialog();
+                                setState(() {
+                                  verifiedIcon = Icon(Icons.check_circle,color: Colors.green);
+                                });
                               }
                               else{
                                 NotVerfiedDialog();
+                                setState(() {
+                                  verifiedIcon = Icon(Icons.cancel,color: Colors.red);
+                                  gstController.text = "";
+                                });
                               }
 
 
