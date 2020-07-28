@@ -6,9 +6,10 @@ class Retailer{
   String _retailerId;
   String _location;
   String _profileUrl;
+  Map _gstInfo;
 
 
-  Retailer(this._name,this._phone,this._gst,this._address,this._retailerId,this._location,this._profileUrl);
+  Retailer(this._name,this._phone,this._gst,this._address,this._retailerId,this._location,this._profileUrl,this._gstInfo);
 
   Retailer.map(dynamic obj){
     this._name = obj['name'];
@@ -18,6 +19,7 @@ class Retailer{
     this._retailerId = obj['retailedId'];
     this._location = obj['location'];
     this._profileUrl = obj['profileUrl'];
+    this._gstInfo = obj['gstInfo'];
 
   }
 
@@ -28,6 +30,7 @@ class Retailer{
   String get retailerId => _retailerId;
   String get location => _location;
   String get profileUrl => _profileUrl;
+  Map get gstInfo => _gstInfo;
 
 
   Map<String,dynamic> toMap(){
@@ -39,6 +42,7 @@ class Retailer{
     map ['retailerId'] = _retailerId;
     map ['location'] = _location;
     map  ['profileUrl'] = _profileUrl;
+    map ['gstInfo'] = _gstInfo;
 
      return map;
   }
@@ -51,6 +55,7 @@ class Retailer{
     this._retailerId = map ['retailerId'];
     this._location = map ['location'];
     this._profileUrl = map['profileUrl'];
+    this._gstInfo = map['gstInfo'];
 
 
   }

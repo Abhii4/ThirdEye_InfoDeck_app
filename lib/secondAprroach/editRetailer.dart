@@ -16,6 +16,8 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 import 'dart:io';
 
+import 'gstinfoPage.dart';
+
 
 class EditRetailer extends StatefulWidget {
   final Retailer retailer;
@@ -60,7 +62,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
       new Future.delayed(Duration.zero, () {
         final retailerProvider =
         Provider.of<RetailerProvider>(this.context, listen: false);
-        retailerProvider.loadValues(Retailer(null, null, null, null,null,null,null));
+        retailerProvider.loadValues(Retailer(null, null, null, null,null,null,null,null));
       });
     } else {
       //Controller Update
@@ -70,6 +72,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
       addressController.text = widget.retailer.address;
       userLocation = widget.retailer.location;
       imageUrl = widget.retailer.profileUrl;
+
       //State Update
       new Future.delayed(Duration.zero, () {
         final retailerProvider =
@@ -158,114 +161,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
      return null;
     }
   }
-  void NotVerfiedDialog() {
-    showDialog(
-        context: this.context,barrierDismissible: false,
-        builder: (BuildContext context) {
-          return new AlertDialog(
-            title: Text('NOT VERIFIED'),
-            content: const Text('Invalid GST number!'),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('Ok'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        });
-  }
-//  void VerfiedDialog() {
-//    showDialog(
-//        context: this.context,barrierDismissible: false,
-//        builder: (BuildContext context) {
-//          return new AlertDialog(
-//            title: Text(' VERIFIED'),
-//            content:
-//            Container(
-//
-//                child: ListView(
-//                  child: Column(
-//                    mainAxisSize: MainAxisSize.min,
-//
-//                    children: <Widget>[
-//                      Container(
-//                        child: Text("Name :"+ gstInfo['data']['lgnm']),
-//                      ),
-//                      SizedBox(height: 10),
-//                      Container(
-//                        child: Text("Trade Name :"+ gstInfo['data']['tradeNam']),
-//                      ),
-//                      SizedBox(height: 10),
-//                      Container(
-//                        child: Text("Legal Name of Business :"+ gstInfo['data']['lgnm']),
-//                      ),
-//                      SizedBox(height: 10),
-//                      Container(
-//                        child: Text("State Jurisdiction :"+ gstInfo['data']['stj']),
-//                      ),
-//                      SizedBox(height: 10),
-//                      Container(
-//                        child: Text("Date of Registration :"+ gstInfo['data']['rgdt']),
-//                      ),
-//                      SizedBox(height: 10),
-//                      Container(
-//                        child: Text("Constitution of Business :"+ gstInfo['data']['ctb']),
-//                      ),
-//                      SizedBox(height: 10),
-//                      Container(
-//                        child: Text("Taxpayer type :"+ gstInfo['data']['dty']),
-//                      ),
-//                      SizedBox(height: 10),
-//                      Container(
-//                        child: Text("Nature of Business Activity :"+ gstInfo['data']['nba'].toString()),
-//                      ),
-//                      SizedBox(height: 10),
-//                      Container(
-//                        child: Text("Trade Name :"+ gstInfo['data']['tradeNam']),
-//                      ),
-//                      SizedBox(height: 10),
-//                      Container(
-//                        child: Text("GSTN status :"+ gstInfo['data']['sts']),
-//                      ),
-//                      SizedBox(height: 10),
-//                      Container(
-//                        child: Text("Date of Cancellation :"+ gstInfo['data']['cxdt']),
-//                      ),
-//                      SizedBox(height: 10),
-//                      Container(
-//                        child: Text("Last Updated Date :"+ gstInfo['data']['lstupdt']),
-//                      ),
-//                      SizedBox(height: 10),
-//                      Container(
-//                        child: Text("State Jurisdiction Code :"+ gstInfo['data']['stjCd']),
-//                      ),
-//                      SizedBox(height: 10),
-//                      Container(
-//                        child: Text("Centre Jurisdiction Code :"+ gstInfo['data']['ctjCd']),
-//                      ),SizedBox(height: 10),
-//                      Container(
-//                        child: Text("Additional Place of Business Fields :"+ gstInfo['data']['adadr'].toString()),
-//                      ),
-//                      SizedBox(height: 10),
-//                      Container(
-//                        child: Text("Additional Place of Bussiness address :"+ gstInfo['data']['pradr']['addr'].toString()),
-//                      ),
-//                    ],),
-//                )
-//            ),
-//            actions: <Widget>[
-//              FlatButton(
-//                child: Text('Ok'),
-//                onPressed: () {
-//                  Navigator.of(context).pop();
-//                },
-//              ),
-//            ],
-//          );
-//        });
-//  }
+
   Widget _getActionButtons() {
     return Padding(
       padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
@@ -625,17 +521,18 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                               left: 25.0, right: 25.0, top: 20.0),
                           child: new Row(
                             children: <Widget>[
-                              new Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  new Text(
-                                    userLocation,
-                                    maxLines: 3,
+                              Flexible(
+                                child: new Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    new Text(
+                                      userLocation,
 
-                                    style: TextStyle(fontWeight: FontWeight.bold),
-                                  )
-                                ],
+                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                    )
+                                  ],
+                                ),
                               ),
 
                             ],
@@ -692,20 +589,36 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                               await verifyGst().then((value) => gstInfo=value);
                               print(gstInfo['error']);
                               if(gstInfo['error']==false){
-//                                VerfiedDialog();
                                 setState(() {
                                   verifiedIcon = Icon(Icons.check_circle,color: Colors.green);
                                 });
+                                Fluttertoast.showToast(
+                                    msg: "Your GST number is Verified!",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.green,
+                                    textColor: Colors.black,
+                                    fontSize: 16.0
+                                );
+
+                                retailerProvider.changeGstInfo(gstInfo['data']['tradeNam'],gstInfo['data']['lgnm'],gstInfo['data']['stj'],gstInfo['data']['rgdt'],gstInfo['data']['ctb'],gstInfo['data']['dty'],gstInfo['data']['nba'].toString(),gstInfo['data']['sts'],gstInfo['data']['cxdt'],gstInfo['data']['lstupdt'],gstInfo['data']['stjCd'],gstInfo['data']['ctjCd'], gstInfo['data']['adadr'].toString(),gstInfo['data']['pradr']['addr'].toString());
                               }
                               else{
-                                NotVerfiedDialog();
+                                Fluttertoast.showToast(
+                                    msg: "Incorrect GST Number!",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.black,
+                                    fontSize: 16.0
+                                );
                                 setState(() {
                                   verifiedIcon = Icon(Icons.cancel,color: Colors.red);
                                   gstController.text = "";
                                 });
                               }
-
-
                             },
                             child: Container(
 
@@ -734,6 +647,43 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                 ),
                 SizedBox(
                   height: 5,
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: FadeAnimation(
+                        1.9,
+                        (widget.retailer != null)
+                            ? InkWell(
+
+                            onTap: ()  async {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) => GstInfoPage(
+                                        retailerId : _getretailerId
+                                    )));
+                              }
+                              ,
+                            child: Container(
+                              margin: const EdgeInsets.fromLTRB(70,10,45,10),
+                              padding: const EdgeInsets.all(3.0),
+                              height: 50,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: Color.fromRGBO(35, 121, 69, 1)),
+                              child: Center(
+                                child: Text(
+                                  "View GST Info",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            )
+                            )
+                            : Container(),
+                      ),
+                    ),
+                  ],
                 ),
                 Row(
                   children: <Widget>[

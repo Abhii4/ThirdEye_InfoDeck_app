@@ -16,6 +16,7 @@ class RetailerProvider with ChangeNotifier {
   String _location;
   var uuid = Uuid();
   String _profileUrl;
+  Map _gstInfo;
 
   //Getters
   String get name => _name;
@@ -24,6 +25,7 @@ class RetailerProvider with ChangeNotifier {
   String get address => _address;
   String get location => _location;
   String get profileUrl => _profileUrl;
+  Map get gstInfo => _gstInfo;
 
 
 
@@ -56,6 +58,10 @@ class RetailerProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  changeGstInfo(String lgnm,String tradeNam,String stj,String rgdt,String ctb,String dty,String nba,String sts,String cxdt,String lstupdt,String stjCd,String ctjCd,String adadr,String addr){
+    _gstInfo = {'lgnm':lgnm,'tradeNam': tradeNam, 'stj': stj, 'rgdt': rgdt, 'ctb': ctb,'dty': dty, 'nba': nba,'sts':sts, 'cxdt':cxdt,'lstupdt':lstupdt,'stjCd':stjCd,'ctjCd':ctjCd,'adadr': adadr, 'addr':addr};
+  }
+
 
   loadValues(Retailer retailer){
     _name=retailer.name;
@@ -65,6 +71,7 @@ class RetailerProvider with ChangeNotifier {
     _retailerId=retailer.retailerId;
     _location=retailer.location;
     _profileUrl= retailer.profileUrl;
+    _gstInfo = retailer.gstInfo;
 
   }
 
@@ -72,12 +79,12 @@ class RetailerProvider with ChangeNotifier {
   saveRetailer() {
 
     if (_retailerId == null) {
-      var newRetailer = Retailer(name,phone,gst,address,uuid.v4(),location,profileUrl);
+      var newRetailer = Retailer(name,phone,gst,address,uuid.v4(),location,profileUrl,gstInfo);
       firestoreService.saveRetailer(newRetailer);
     } else {
       //Update
       var updatedRetailer =
-      Retailer(name,phone,gst,address,_retailerId,location,profileUrl);
+      Retailer(name,phone,gst,address,_retailerId,location,profileUrl,gstInfo);
       firestoreService.saveRetailer(updatedRetailer);
     }
   }
