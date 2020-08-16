@@ -50,7 +50,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
 
   String email, password;
-  bool _validate = false;
+  int _validate = 0;
   final _email = TextEditingController();
   final _pass = TextEditingController();
 
@@ -209,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
                               border: InputBorder.none,
                               hintText: "Email",
                               hintStyle: TextStyle(color: Colors.grey),
-                              errorText: _validate ? 'Value Can\'t Be Empty' : null,
+
                             ),
                             validator: EmailFieldValidator.validate,
                             onChanged: (value) {
@@ -233,7 +233,7 @@ class _LoginPageState extends State<LoginPage> {
                                 border: InputBorder.none,
                                 hintText: "Password",
                                 hintStyle: TextStyle(color: Colors.grey),
-                              errorText: _validate ? 'Value Can\'t Be Empty' : null,),
+                              ),
                             validator:  PasswordFieldValidator.validate,
                             onChanged: (value) {
                               password = value;
@@ -259,10 +259,29 @@ class _LoginPageState extends State<LoginPage> {
                           child: InkWell(
                             onTap: () {
                               setState(() {
-                                _email.text.isEmpty ? _validate = true : _validate = false;
-                                _pass.text.isEmpty ? _validate = true : _validate = false;
+                                _email.text.isEmpty ? Fluttertoast.showToast(
+                                    msg: "Please enter Email!",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.black,
+                                    fontSize: 16.0
+                                )
+                                 : _validate = _validate+1;
+                                _pass.text.isEmpty ? Fluttertoast.showToast(
+                                    msg: "Please enter Password!",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.black,
+                                    fontSize: 16.0
+                                ): _validate = _validate+1;
                               });
-                              login();
+                              if(_validate==2){
+                                login();
+                              }
                             },
                             child: Container(
                               height: 50,

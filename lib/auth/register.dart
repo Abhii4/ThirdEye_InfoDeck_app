@@ -33,7 +33,7 @@ class _RegPageState extends State<RegPage> {
 
 
   String email, password, name;
-  bool _validate = false;
+  int _validate = 0;
   final _name = TextEditingController();
   final _email = TextEditingController();
   final _pass = TextEditingController();
@@ -218,7 +218,6 @@ class _RegPageState extends State<RegPage> {
                               border: InputBorder.none,
                               hintText: "Name",
                               hintStyle: TextStyle(color: Colors.grey),
-                              errorText: _validate ? 'Value Can\'t Be Empty' : null,
                             ),
 
                             onChanged: (value) {
@@ -241,7 +240,6 @@ class _RegPageState extends State<RegPage> {
                               border: InputBorder.none,
                               hintText: "Email",
                               hintStyle: TextStyle(color: Colors.grey),
-                              errorText: _validate ? 'Value Can\'t Be Empty' : null,
                             ),
 
                             onChanged: (value) {
@@ -265,7 +263,6 @@ class _RegPageState extends State<RegPage> {
                                 border: InputBorder.none,
                                 hintText: "Password",
                                 hintStyle: TextStyle(color: Colors.grey),
-                              errorText: _validate ? 'Value Can\'t Be Empty' : null,
                             ),
 
                             onChanged: (value) {
@@ -280,11 +277,37 @@ class _RegPageState extends State<RegPage> {
                           child: InkWell(
                             onTap: () {
                               setState(() {
-                                _name.text.isEmpty ? _validate = true : _validate = false;
-                                _email.text.isEmpty ? _validate = true : _validate = false;
-                                _pass.text.isEmpty ? _validate = true : _validate = false;
+                                _name.text.isEmpty ? Fluttertoast.showToast(
+                                    msg: "Please enter Name!",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.black,
+                                    fontSize: 16.0
+                                ) : _validate = _validate+1;
+                                _email.text.isEmpty ? Fluttertoast.showToast(
+                                    msg: "Please enter Email!",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.black,
+                                    fontSize: 16.0
+                                ) : _validate = _validate+1;
+                                _pass.text.isEmpty ? Fluttertoast.showToast(
+                                    msg: "Please enter Password!",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.black,
+                                    fontSize: 16.0
+                                ) : _validate = _validate+1;
                               });
-                              register();
+                              if(_validate==3){
+                                register();
+                              }
                             },
                             child: Container(
                               height: 50,

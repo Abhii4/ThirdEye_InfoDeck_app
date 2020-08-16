@@ -16,6 +16,7 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 import 'dart:io';
 
+import 'fileuploadPage.dart';
 import 'gstinfoPage.dart';
 
 
@@ -35,7 +36,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
   String token;
   var gstInfo;
   String gstNo;
-  bool _validate = false;
+  int _validate = 0;
   bool _status = true;
   String imageUrl;
   var verifiedIcon;
@@ -359,7 +360,6 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                                     },
                                     decoration:  InputDecoration(
                                       hintText: "Enter Retailer's Name",
-                                      errorText: _validate ? 'Value Can\'t Be Empty' : null,
                                     ),
                                     enabled: !_status,
                                     autofocus: !_status,
@@ -403,7 +403,6 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                                     },
                                     decoration:  InputDecoration(
                                       hintText: "Enter Retailer's Mobile",
-                                      errorText: _validate ? 'Value Can\'t Be Empty' : null,
                                     ),
                                     enabled: !_status,
                                     autofocus: !_status,
@@ -448,7 +447,6 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                                     },
                                     decoration:  InputDecoration(
                                       hintText: "Enter GST number",
-                                      errorText: _validate ? 'Value Can\'t Be Empty' : null,
                                         suffixIcon: verifiedIcon,
                                       ),
                                     enabled: !_status,
@@ -490,11 +488,11 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                                     },
                                     decoration:  InputDecoration(
                                       hintText: "Enter Retailer's Address ",
-                                      errorText: _validate ? 'Value Can\'t Be Empty' : null,),
+
                                     enabled: !_status,
                                   ),
                                 ),
-                              ],
+                                )],
                             )),
                         Padding(
                             padding: EdgeInsets.only(
@@ -573,19 +571,50 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                   children: <Widget>[
                     Expanded(
                       child: FadeAnimation(
+                        1.9,(widget.retailer != null)
+                          ? InkWell(
+                          onTap: () async {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => FileUploadPage(
+                                    retailerId : _getretailerId,
+                                  )));
+                            },
+                            child: Container(
+
+                              margin: const EdgeInsets.fromLTRB(100,0,100,0),
+                              padding: const EdgeInsets.all(3.0),
+                              height: 50,
+
+                              decoration: BoxDecoration(
+
+                                  borderRadius:
+                                  BorderRadius.circular(50),
+                                  color: Color.fromRGBO(35, 121, 69, 1)),
+                              child: Center(
+                                child: Text(
+                                  'Upload Files',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            )) : Container(),
+
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Row (
+                  children: <Widget>[
+                    Expanded(
+                      child: FadeAnimation(
                         1.9,
                         (widget.retailer == null)
                             ? InkWell(
                             onTap: () async {
-//                              Fluttertoast.showToast(
-//                                  msg: "Feature not available right now",
-//                                  toastLength: Toast.LENGTH_LONG,
-//                                  gravity: ToastGravity.BOTTOM,
-//                                  timeInSecForIosWeb: 1,
-//                                  backgroundColor: Colors.red,
-//                                  textColor: Colors.white,
-//                                  fontSize: 16.0
-//                              );
                               await verifyGst().then((value) => gstInfo=value);
                               print(gstInfo['error']);
                               if(gstInfo['error']==false){
@@ -693,12 +722,36 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                         InkWell(
                             onTap: ()  async {
                               setState(() {
-                                addressController.text.isEmpty ? _validate = true : _validate = false;
-                                nameController.text.isEmpty ? _validate = true : _validate = false;
-                                gstController.text.isEmpty ? _validate = true : _validate = false;
-                                phoneController.text.isEmpty ? _validate = true : _validate = false;
+                                addressController.text.isEmpty ? Fluttertoast.showToast(
+                                    msg: "Please enter Address!",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.black,
+                                    fontSize: 16.0
+                                ) : _validate = _validate+1;
+                                nameController.text.isEmpty ? Fluttertoast.showToast(
+                                    msg: "Please enter Name!",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.black,
+                                    fontSize: 16.0
+                                ) : _validate = _validate+1;
+
+                                phoneController.text.isEmpty ? Fluttertoast.showToast(
+                                    msg: "Please enter Phone no!!",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.black,
+                                    fontSize: 16.0
+                                ) : _validate = _validate+1;
                               });
-                              if(_validate== false){
+                              if(_validate== 3){
                                 retailerProvider.changeLocation(userLocation);
                                 retailerProvider.changeProfileUrl(imageUrl);
 
