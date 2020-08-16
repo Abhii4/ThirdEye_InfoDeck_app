@@ -94,11 +94,12 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
   }
 
   Future uploadPic(BuildContext context) async{
-
     String fileName = basename(_image.path);
     StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child('retailerProfilePics').child(fileName);
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
-    imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+    setState(() async {
+      imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+    });
     print(imageUrl);
     print("Profile Picture uploaded");
   }

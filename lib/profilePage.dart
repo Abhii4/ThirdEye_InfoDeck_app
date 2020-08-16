@@ -36,7 +36,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
   final emailController = TextEditingController();
   final addressController = TextEditingController();
 
-  var imageUrl;
+  var imageUrl = 'null';
   File _image;
 
 
@@ -66,11 +66,12 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
   Future uploadPic(BuildContext context) async{
     final FirebaseUser user = await FirebaseAuth.instance.currentUser();
     String fileName = basename(_image.path);
-    StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child('userProfilePics').child(fileName);
+    StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child('userProfilePics').child(user.uid).child(fileName);
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
-     imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+
     setState(() async {
       print("Profile Picture uploaded");
+      imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
 
       Firestore.instance.collection('users').document(user.uid).updateData({'profileUrl' :imageUrl});
       Scaffold.of(context).showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
@@ -86,7 +87,10 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
     await document.get().then((snapshot) async{
       print(snapshot['email'].toString());
       setState(() {
-        imageUrl=snapshot.data['profileUrl'].toString();
+        if(snapshot.data['profileUrl'].toString()!=null){
+          imageUrl=snapshot.data['profileUrl'].toString();
+        }
+
 
         if(snapshot.data['name'] != null){
           nameController.text = snapshot.data['name'].toString();
@@ -257,7 +261,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                                 height: 140.0,
                                 decoration: new BoxDecoration(
                                   shape: BoxShape.circle,
-                                    image: DecorationImage(image:(imageUrl!=null)? NetworkImage(imageUrl): new ExactAssetImage(
+                                    image: DecorationImage(image:(imageUrl!='null')? NetworkImage(imageUrl): new ExactAssetImage(
                                         'assets/images/as.png'),
                                         fit: BoxFit.cover)
 
