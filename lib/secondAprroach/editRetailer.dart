@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:infodeck/animations/FadeAnimation.dart';
+import 'package:infodeck/fileUpload/filesuploadPage.dart';
+
+
 import 'package:infodeck/secondAprroach/givenPackagePage.dart';
 import 'package:infodeck/secondAprroach/packagePage.dart';
 import 'package:infodeck/secondAprroach/retailer.dart';
@@ -16,7 +19,7 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 import 'dart:io';
 
-import 'fileuploadPage.dart';
+
 import 'gstinfoPage.dart';
 
 
@@ -94,7 +97,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
   }
 
   Future uploadPic(BuildContext context) async{
-    String fileName = basename(_image.path);
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child('retailerProfilePics').child(fileName);
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
     setState(() async {
@@ -576,7 +579,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                           ? InkWell(
                           onTap: () async {
                               Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) => FileUploadPage(
+                                  MaterialPageRoute(builder: (context) => FilesUploadPage(
                                     retailerId : _getretailerId,
                                   )));
                             },
