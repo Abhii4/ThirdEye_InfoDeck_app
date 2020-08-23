@@ -130,7 +130,9 @@ class _UploadImagesState extends State<UploadImages> {
   }
   void uploadImages(){
 
-      showProgressBar(whileRun: () async {
+      showProgressBar(backgroundColor: Colors.black,
+          textColor: Colors.white,
+          text: "Uploading...",whileRun: () async {
         for ( var imageFile in images) {
         await postImage(imageFile).then((downloadUrl) async {
 
