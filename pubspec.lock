@@ -261,6 +261,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.7.10"
+  native_progress_hud:
+    dependency: transitive
+    description:
+      name: native_progress_hud
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.5"
   nested:
     dependency: transitive
     description:
@@ -364,6 +371,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  smart_progress_bar:
+    dependency: "direct main"
+    description:
+      name: smart_progress_bar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.6"
   source_span:
     dependency: transitive
     description:

@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:infodeck/fileUpload/utils.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:smart_progress_bar/smart_progress_bar.dart';
 
 
 class UploadImages extends StatefulWidget {
@@ -21,6 +22,8 @@ class _UploadImagesState extends State<UploadImages> {
   String _error = 'No Error Dectected';
   bool isUploading = false;
   String retailerID;
+  StorageUploadTask uploadTask;
+
 
   @override
   void initState() {
@@ -83,23 +86,19 @@ class _UploadImagesState extends State<UploadImages> {
                       if(images.length==0){
                         showDialog(context: context,builder: (_){
                           return AlertDialog(
-                            backgroundColor: Theme.of(context).backgroundColor,
-                            content: Text("No image selected",style: TextStyle(color: Colors.white)),
-                            actions: <Widget>[
-                              InkWell(
-                                onTap: (){
-                                  Navigator.pop(context);
-                                },
-                                child: ThreeDContainer(
-                                  width: 80,
-                                  height: 30,
-                                  backgroundColor: MultiPickerApp.navigateButton,
-                                  backgroundDarkerColor: MultiPickerApp.background,
-                                  child: Center(child: Text("Ok",style: TextStyle(color: Colors.white),)),
-                                ),
-                              )
+                            title: Text("ERROR"),
+                            content: Text("No Images Selected!"),
+                            actions: [
+                          FlatButton(
+                          child: Text("OK"),
+                          onPressed: () {
+
+                            Navigator.of(context, rootNavigator: true).pop();
+                          },
+                          ),
                             ],
                           );
+
                         });
                       }
                       else{
@@ -121,34 +120,41 @@ class _UploadImagesState extends State<UploadImages> {
               SizedBox(height: 10,),
               Expanded(
                 child: buildGridView(),
-              )
+              ),
             ],
           ),
+
         ),
       ],
     );
   }
   void uploadImages(){
-    for ( var imageFile in images) {
-      postImage(imageFile).then((downloadUrl) async {
-        imageUrls.add(downloadUrl.toString());
-        if(imageUrls.length==images.length){
 
-          final FirebaseUser user = await FirebaseAuth.instance.currentUser();
-          Firestore.instance.collection('users').document(user.uid).collection('retailers').document(retailerID).updateData({'imageUrls' :FieldValue.arrayUnion(imageUrls)});
-          Firestore.instance.collection('retailersList').document(retailerID).updateData({'imageUrls': FieldValue.arrayUnion(imageUrls)}).then((_){
-            SnackBar snackbar = SnackBar(content: Text('Uploaded Successfully'));
-            widget.globalKey.currentState.showSnackBar(snackbar);
-            setState(() {
-              images = [];
-              imageUrls = [];
+      showProgressBar(whileRun: () async {
+        for ( var imageFile in images) {
+        await postImage(imageFile).then((downloadUrl) async {
+
+          imageUrls.add(downloadUrl.toString());
+          if(imageUrls.length==images.length){
+
+            final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+            Firestore.instance.collection('users').document(user.uid).collection('retailers').document(retailerID).updateData({'imageUrls' :FieldValue.arrayUnion(imageUrls)});
+            Firestore.instance.collection('retailersList').document(retailerID).updateData({'imageUrls': FieldValue.arrayUnion(imageUrls)}).then((_){
+
+              SnackBar snackbar = SnackBar(content: Text('Uploaded Successfully'));
+              widget.globalKey.currentState.showSnackBar(snackbar);
+              setState(() {
+                images = [];
+                imageUrls = [];
+              });
             });
-          });
-        }
-      }).catchError((err) {
-        print(err);
-      });
-    }
+          }
+        }).catchError((err) {
+          print(err);
+        });
+      }
+
+    });
 
   }
   Future<void> loadAssets() async {
@@ -177,9 +183,7 @@ class _UploadImagesState extends State<UploadImages> {
       error = e.toString();
     }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
+
     if (!mounted) return;
     setState(() {
       images = resultList;
@@ -187,12 +191,62 @@ class _UploadImagesState extends State<UploadImages> {
     });
   }
   Future<dynamic> postImage(Asset imageFile) async {
+
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     StorageReference reference = FirebaseStorage.instance.ref().child('retailerFiles').child(retailerID).child(fileName);
-    StorageUploadTask uploadTask = reference.putData((await imageFile.getByteData()).buffer.asUint8List());
+     uploadTask = reference.putData((await imageFile.getByteData()).buffer.asUint8List());
+
     StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
+
+
     print(storageTaskSnapshot.ref.getDownloadURL());
     return storageTaskSnapshot.ref.getDownloadURL();
   }
+
+//  String _bytesTransferred(StorageTaskSnapshot snapshot) {
+//    double res = (snapshot.bytesTransferred / 1024.0) / 1000;
+//    double res2 = (snapshot.totalByteCount / 1024.0) / 1000;
+//    return '${res.toStringAsFixed(2)}/${res2.toStringAsFixed(2)}';
+//  }
+//
+//
+//  Widget _uploadStatus(StorageUploadTask task) {
+//
+//      return (task!=null)? StreamBuilder(
+//        stream: task.events,
+//        builder: (BuildContext context, snapshot) {
+//          Widget subtitle;
+//          if (snapshot.hasData) {
+//            final StorageTaskEvent event = snapshot.data;
+//            final StorageTaskSnapshot snap = event.snapshot;
+//            subtitle = Text('${_bytesTransferred(snap)} KB sent');
+//            print(_bytesTransferred(snap));
+//          } else {
+//            subtitle = const Text('Starting...');
+//            print('Starting');
+//          }
+//          return ListTile(
+//            title: task.isComplete && task.isSuccessful
+//                ? Text(
+//              'Done',
+//
+//            )
+//                : Text(
+//              'Uploading',
+//
+//            ),
+//            subtitle: subtitle,
+//          );
+//        },
+//      ) :
+//       ListTile(
+//        title: Text(
+//          'No Task',
+//        )
+//
+//      );
+//
+//    }
+
 
 }

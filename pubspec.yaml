@@ -36,6 +36,7 @@ dependencies:
   firebase_storage: ^2.1.0+1
   carousel_pro: ^1.0.0
   multi_image_picker: ^4.6.1
+  smart_progress_bar: any
 
 dev_dependencies:
   flutter_test:
