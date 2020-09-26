@@ -35,9 +35,11 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
   final gstController = TextEditingController();
   final addressController = TextEditingController();
   String phoneNumber;
+  bool visibility = true;
   String userLocation='';
   String token;
   var gstInfo;
+  bool isVerified = false;
   String gstNo;
   int _validate = 0;
   bool _status = true;
@@ -108,6 +110,47 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
   }
 
 
+  void VerfiedDialog() {
+    showDialog(
+        context: this.context,barrierDismissible: false,
+        builder: (BuildContext context) {
+          return new AlertDialog(
+            title: Text(' VERIFIED'),
+            content:
+
+            Container(
+
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+
+                  children: <Widget>[
+                    Container(
+                      child: Text("Name :"+ gstInfo['data']['lgnm']),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      child: Text("Trade Name :"+ gstInfo['data']['tradeNam']),
+                    ),],)
+
+
+
+            ),
+
+
+
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+
 
 
 
@@ -169,7 +212,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
 
   Widget _getActionButtons() {
     return Padding(
-      padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
+      padding: EdgeInsets.only(left: 60.0, right: 60.0, top: 45.0),
       child: new Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -179,11 +222,12 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
               padding: EdgeInsets.only(right: 10.0),
               child: Container(
                   child: new RaisedButton(
-                    child: new Text("Save"),
+                    child: new Text("Confirm Details"),
                     textColor: Colors.white,
                     color: Colors.green,
                     onPressed: () {
                       setState(() {
+                        visibility = true;
                         _status = true;
                         FocusScope.of(this.context).requestFocus(new FocusNode());
                       });
@@ -211,6 +255,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
       ),
       onTap: () {
         setState(() {
+          visibility = false;
           _status = false;
         });
       },
@@ -321,13 +366,16 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                                     ),
                                   ],
                                 ),
+                                (widget.retailer == null)?
+
                                 new Column(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   mainAxisSize: MainAxisSize.min,
                                   children: <Widget>[
+
                                     _status ? _getEditIcon() : new Container(),
                                   ],
-                                )
+                                ) : new Container(),
                               ],
                             )),
                         Padding(
@@ -554,7 +602,11 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
 
                             print("Location is :" + userLocation);
                             retailerProvider.changeLocation(userLocation);},
-                          color: Colors.lightBlue,
+                          color: Color.fromRGBO(94, 197, 198, 1),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                              side: BorderSide(color: Colors.red)
+                          ),
                           child: Text("Get Location", style: TextStyle(color: Colors.white),),
                         ),
 
@@ -568,51 +620,13 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
 
                   ),
                 ),
+
                 SizedBox(
                   height: 5,
                 ),
                 Row (
                   children: <Widget>[
-                    Expanded(
-                      child: FadeAnimation(
-                        1.9,(widget.retailer != null)
-                          ? InkWell(
-                          onTap: () async {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) => FilesUploadPage(
-                                    retailerId : _getretailerId,
-                                  )));
-                            },
-                            child: Container(
-
-                              margin: const EdgeInsets.fromLTRB(100,0,100,0),
-                              padding: const EdgeInsets.all(3.0),
-                              height: 50,
-
-                              decoration: BoxDecoration(
-
-                                  borderRadius:
-                                  BorderRadius.circular(50),
-                                  color: Color.fromRGBO(35, 121, 69, 1)),
-                              child: Center(
-                                child: Text(
-                                  'Upload Files',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            )) : Container(),
-
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Row (
-                  children: <Widget>[
+                    visibility?
                     Expanded(
                       child: FadeAnimation(
                         1.9,
@@ -624,6 +638,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                               if(gstInfo['error']==false){
                                 setState(() {
                                   verifiedIcon = Icon(Icons.check_circle,color: Colors.green);
+                                  isVerified = true;
                                 });
                                 Fluttertoast.showToast(
                                     msg: "Your GST number is Verified!",
@@ -636,7 +651,10 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                                 );
 
                                 retailerProvider.changeGstInfo(gstInfo['data']['tradeNam'],gstInfo['data']['lgnm'],gstInfo['data']['stj'],gstInfo['data']['rgdt'],gstInfo['data']['ctb'],gstInfo['data']['dty'],gstInfo['data']['nba'].toString(),gstInfo['data']['sts'],gstInfo['data']['cxdt'],gstInfo['data']['lstupdt'],gstInfo['data']['stjCd'],gstInfo['data']['ctjCd'], gstInfo['data']['adadr'].toString(),gstInfo['data']['pradr']['addr'].toString());
+                                VerfiedDialog();
+
                               }
+
                               else{
                                 Fluttertoast.showToast(
                                     msg: "Incorrect GST Number!",
@@ -650,12 +668,13 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                                 setState(() {
                                   verifiedIcon = Icon(Icons.cancel,color: Colors.red);
                                   gstController.text = "";
+                                  isVerified = false;
                                 });
                               }
                             },
                             child: Container(
 
-                              margin: const EdgeInsets.fromLTRB(100,0,100,0),
+                              margin: const EdgeInsets.fromLTRB(110,0,110,0),
                               padding: const EdgeInsets.all(3.0),
                               height: 50,
 
@@ -675,11 +694,11 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                             ))
                             : Container(),
                       ),
-                    ),
+                    ) : new Container(),
                   ],
                 ),
                 SizedBox(
-                  height: 5,
+                  height: 80,
                 ),
                 Row(
                   children: <Widget>[
@@ -697,12 +716,12 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                               }
                               ,
                             child: Container(
-                              margin: const EdgeInsets.fromLTRB(70,10,45,10),
+                              margin: const EdgeInsets.fromLTRB(100,0,100,0),
                               padding: const EdgeInsets.all(3.0),
                               height: 50,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(50),
-                                  color: Color.fromRGBO(35, 121, 69, 1)),
+                                  color: Color.fromRGBO(94, 197, 198, 1)),
                               child: Center(
                                 child: Text(
                                   "View GST Info",
@@ -720,11 +739,15 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                 ),
                 Row(
                   children: <Widget>[
+                    (visibility)?
                     Expanded(
                       child: FadeAnimation(
                         1.8,
+                        (widget.retailer == null)
+                            ?
                         InkWell(
                             onTap: ()  async {
+
                               setState(() {
                                 addressController.text.isEmpty ? Fluttertoast.showToast(
                                     msg: "Please enter Address!",
@@ -755,37 +778,51 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                                     fontSize: 16.0
                                 ) : _validate = _validate+1;
                               });
-                              if(_validate== 3){
-                                retailerProvider.changeLocation(userLocation);
-                                retailerProvider.changeProfileUrl(imageUrl);
-
-                                if(_image!=null){
-                                  await uploadPic(context);
-                                  print(imageUrl);
+                              if(isVerified) {
+                                if (_validate == 3) {
+                                  retailerProvider.changeLocation(userLocation);
                                   retailerProvider.changeProfileUrl(imageUrl);
+
+                                  if (_image != null) {
+                                    await uploadPic(context);
+                                    print(imageUrl);
+                                    retailerProvider.changeProfileUrl(imageUrl);
+                                  }
+                                  await retailerProvider.saveRetailer();
+
+                                  Navigator.of(context).pop();
+
+                                  Fluttertoast.showToast(
+                                      msg: "Retailer successfully added!",
+                                      toastLength: Toast.LENGTH_LONG,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.black,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0
+                                  );
                                 }
-                                await retailerProvider.saveRetailer();
-
-                                Navigator.of(context).pop();
-
+                              }
+                              else {
                                 Fluttertoast.showToast(
-                                    msg: "Retailer successfully added!",
+                                    msg: "Please verify GST first!",
                                     toastLength: Toast.LENGTH_LONG,
                                     gravity: ToastGravity.BOTTOM,
                                     timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.black,
-                                    textColor: Colors.white,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.black,
                                     fontSize: 16.0
                                 );
+
                               }
                             },
                             child: Container(
-                              margin: const EdgeInsets.fromLTRB(70,10,45,10),
+                              margin: const EdgeInsets.fromLTRB(80,0,60,0),
                               padding: const EdgeInsets.all(3.0),
                               height: 50,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(50),
-                                  color: Color.fromRGBO(35, 121, 69, 1)),
+                                  color: Colors.black),
                               child: Center(
                                 child: Text(
                                   "Save",
@@ -794,47 +831,14 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
-                            )),
+                            )): new Container(),
                       ),
-                    ),
+                    ) : new Container(),
                     SizedBox(
                       width: 30,
                     ),
 ]    ),
-                    Row(
-                    children: <Widget>[
-                      Expanded(
-                      child: FadeAnimation(
-                        1.9,
-                        (widget.retailer != null)
-                            ? InkWell(
-                            onTap: () {
-                              retailerProvider.removeProduct(
-                                  widget.retailer.retailerId);
-                              Navigator.of(context).pop();
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.fromLTRB(100,0,100,0),
-                              padding: const EdgeInsets.all(3.0),
-                              height: 50,
-                              decoration: BoxDecoration(
-                                  borderRadius:
-                                  BorderRadius.circular(50),
-                                  color: Color.fromRGBO(35, 121, 69, 1)),
-                              child: Center(
-                                child: Text(
-                                  "Delete",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ))
-                            : Container(),
-                      ),
-                    ),
-                  ],
-                ),
+
                 SizedBox(
                   height: 10,
                 ),
@@ -859,7 +863,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                               decoration: BoxDecoration(
                                   borderRadius:
                                   BorderRadius.circular(50),
-                                  color: Color.fromRGBO(35, 121, 69, 1)),
+                                  color: Color.fromRGBO(94, 197, 198, 1)),
                               child: Center(
                                 child: Text(
                                   "View Available Packages",
@@ -897,7 +901,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                               decoration: BoxDecoration(
                                   borderRadius:
                                   BorderRadius.circular(50),
-                                  color: Color.fromRGBO(35, 121, 69, 1)),
+                                  color: Color.fromRGBO(94, 197, 198, 1)),
                               child: Center(
                                 child: Text(
                                   "View Assigned Packages",
@@ -913,8 +917,86 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                   ],
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 40,
                 ),
+                Row (
+                  children: <Widget>[
+                    Expanded(
+                      child: FadeAnimation(
+                        1.9,(widget.retailer != null)
+                          ? InkWell(
+                          onTap: () async {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) => FilesUploadPage(
+                                  retailerId : _getretailerId,
+                                )));
+                          },
+                          child: Container(
+
+                            margin: const EdgeInsets.fromLTRB(100,0,100,0),
+                            padding: const EdgeInsets.all(3.0),
+                            height: 50,
+
+                            decoration: BoxDecoration(
+
+                                borderRadius:
+                                BorderRadius.circular(50),
+                                color: Colors.blue),
+                            child: Center(
+                              child: Text(
+                                'Upload Files',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          )) : Container(),
+
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 80,
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: FadeAnimation(
+                        1.9,
+                        (widget.retailer != null)
+                            ? InkWell(
+                            onTap: () {
+                              retailerProvider.removeProduct(
+                                  widget.retailer.retailerId);
+                              Navigator.of(context).pop();
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.fromLTRB(100,0,100,0),
+                              padding: const EdgeInsets.all(3.0),
+                              height: 50,
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                  BorderRadius.circular(50),
+                                  color: Colors.black),
+                              child: Center(
+                                child: Text(
+                                  "Delete",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ))
+                            : Container(),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+
 
               ],
             ),
