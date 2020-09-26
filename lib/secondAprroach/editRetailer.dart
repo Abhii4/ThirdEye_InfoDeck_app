@@ -1,6 +1,5 @@
 import 'dart:convert';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -16,7 +15,7 @@ import 'package:infodeck/secondAprroach/retailerProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
-import 'package:path/path.dart';
+
 import 'dart:io';
 
 
@@ -691,14 +690,20 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
-                            ))
+                            ),)
                             : Container(),
                       ),
                     ) : new Container(),
+
+
                   ],
                 ),
+                (widget.retailer == null)?
                 SizedBox(
                   height: 80,
+                ):
+                SizedBox(
+                  height: 10,
                 ),
                 Row(
                   children: <Widget>[
