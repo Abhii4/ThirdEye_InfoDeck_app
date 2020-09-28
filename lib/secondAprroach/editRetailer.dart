@@ -205,7 +205,7 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
       print(response.body);
       return json.decode(response.body);
     } else {
-     return null;
+      return null;
     }
   }
 
@@ -270,10 +270,10 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
       resizeToAvoidBottomInset: false,
       backgroundColor: Color.fromRGBO(35, 121, 69, 1),
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        elevation: 0.1,
-        backgroundColor: Color.fromRGBO(94, 197, 198, 1),
-        title: Text("Details"), centerTitle: true
+          automaticallyImplyLeading: false,
+          elevation: 0.1,
+          backgroundColor: Color.fromRGBO(94, 197, 198, 1),
+          title: Text("Details"), centerTitle: true
 
       ),
       body: Container(
@@ -498,8 +498,8 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                                     },
                                     decoration:  InputDecoration(
                                       hintText: "Enter GST number",
-                                        suffixIcon: verifiedIcon,
-                                      ),
+                                      suffixIcon: verifiedIcon,
+                                    ),
                                     enabled: !_status,
                                   ),
                                 ),
@@ -540,9 +540,9 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                                     decoration:  InputDecoration(
                                       hintText: "Enter Retailer's Address ",
 
-                                    enabled: !_status,
+                                      enabled: !_status,
+                                    ),
                                   ),
-                                ),
                                 )],
                             )),
                         Padding(
@@ -587,31 +587,31 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                             ],
 
                           ),),
-                    Padding(
-                        padding: EdgeInsets.only(
-                            left: 150.0, right: 25.0, top: 20),
+                        Padding(
+                            padding: EdgeInsets.only(
+                                left: 150.0, right: 25.0, top: 20),
 
-                      child: (widget.retailer == null)
-                          ?Container(
+                            child: (widget.retailer == null)
+                                ?Container(
 
-                        child: RaisedButton(
-                          onPressed: () async {
-                            userLocation = await getLocation();
+                              child: RaisedButton(
+                                onPressed: () async {
+                                  userLocation = await getLocation();
 
 
-                            print("Location is :" + userLocation);
-                            retailerProvider.changeLocation(userLocation);},
-                          color: Color.fromRGBO(94, 197, 198, 1),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                              side: BorderSide(color: Colors.red)
-                          ),
-                          child: Text("Get Location", style: TextStyle(color: Colors.white),),
+                                  print("Location is :" + userLocation);
+                                  retailerProvider.changeLocation(userLocation);},
+                                color: Color.fromRGBO(94, 197, 198, 1),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                    side: BorderSide(color: Colors.red)
+                                ),
+                                child: Text("Get Location", style: TextStyle(color: Colors.white),),
+                              ),
+
+                            ) : Container()
+
                         ),
-
-                      ) : Container()
-
-      ),
                         !_status ? _getActionButtons() : new Container(),
                       ],
 
@@ -631,66 +631,66 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                         1.9,
                         (widget.retailer == null)
                             ? InkWell(
-                            onTap: () async {
-                              await verifyGst().then((value) => gstInfo=value);
-                              print(gstInfo['error']);
-                              if(gstInfo['error']==false){
-                                setState(() {
-                                  verifiedIcon = Icon(Icons.check_circle,color: Colors.green);
-                                  isVerified = true;
-                                });
-                                Fluttertoast.showToast(
-                                    msg: "Your GST number is Verified!",
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.green,
-                                    textColor: Colors.black,
-                                    fontSize: 16.0
-                                );
+                          onTap: () async {
+                            await verifyGst().then((value) => gstInfo=value);
+                            print(gstInfo['error']);
+                            if(gstInfo['error']==false){
+                              setState(() {
+                                verifiedIcon = Icon(Icons.check_circle,color: Colors.green);
+                                isVerified = true;
+                              });
+                              Fluttertoast.showToast(
+                                  msg: "Your GST number is Verified!",
+                                  toastLength: Toast.LENGTH_LONG,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.green,
+                                  textColor: Colors.black,
+                                  fontSize: 16.0
+                              );
 
-                                retailerProvider.changeGstInfo(gstInfo['data']['tradeNam'],gstInfo['data']['lgnm'],gstInfo['data']['stj'],gstInfo['data']['rgdt'],gstInfo['data']['ctb'],gstInfo['data']['dty'],gstInfo['data']['nba'].toString(),gstInfo['data']['sts'],gstInfo['data']['cxdt'],gstInfo['data']['lstupdt'],gstInfo['data']['stjCd'],gstInfo['data']['ctjCd'], gstInfo['data']['adadr'].toString(),gstInfo['data']['pradr']['addr'].toString());
-                                VerfiedDialog();
+                              retailerProvider.changeGstInfo(gstInfo['data']['tradeNam'],gstInfo['data']['lgnm'],gstInfo['data']['stj'],gstInfo['data']['rgdt'],gstInfo['data']['ctb'],gstInfo['data']['dty'],gstInfo['data']['nba'].toString(),gstInfo['data']['sts'],gstInfo['data']['cxdt'],gstInfo['data']['lstupdt'],gstInfo['data']['stjCd'],gstInfo['data']['ctjCd'], gstInfo['data']['adadr'].toString(),gstInfo['data']['pradr']['addr'].toString());
+                              VerfiedDialog();
 
-                              }
+                            }
 
-                              else{
-                                Fluttertoast.showToast(
-                                    msg: "Incorrect GST Number!",
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.red,
-                                    textColor: Colors.black,
-                                    fontSize: 16.0
-                                );
-                                setState(() {
-                                  verifiedIcon = Icon(Icons.cancel,color: Colors.red);
-                                  gstController.text = "";
-                                  isVerified = false;
-                                });
-                              }
-                            },
-                            child: Container(
+                            else{
+                              Fluttertoast.showToast(
+                                  msg: "Incorrect GST Number!",
+                                  toastLength: Toast.LENGTH_LONG,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.black,
+                                  fontSize: 16.0
+                              );
+                              setState(() {
+                                verifiedIcon = Icon(Icons.cancel,color: Colors.red);
+                                gstController.text = "";
+                                isVerified = false;
+                              });
+                            }
+                          },
+                          child: Container(
 
-                              margin: const EdgeInsets.fromLTRB(110,0,110,0),
-                              padding: const EdgeInsets.all(3.0),
-                              height: 50,
+                            margin: const EdgeInsets.fromLTRB(110,0,110,0),
+                            padding: const EdgeInsets.all(3.0),
+                            height: 50,
 
-                              decoration: BoxDecoration(
+                            decoration: BoxDecoration(
 
-                                  borderRadius:
-                                  BorderRadius.circular(50),
-                                  color: Color.fromRGBO(35, 121, 69, 1)),
-                              child: Center(
-                                child: Text(
-                                  'Verify GST',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                                borderRadius:
+                                BorderRadius.circular(50),
+                                color: Color.fromRGBO(35, 121, 69, 1)),
+                            child: Center(
+                              child: Text(
+                                'Verify GST',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
                               ),
-                            ),)
+                            ),
+                          ),)
                             : Container(),
                       ),
                     ) : new Container(),
@@ -714,12 +714,12 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                             ? InkWell(
 
                             onTap: ()  async {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) => GstInfoPage(
-                                        retailerId : _getretailerId
-                                    )));
-                              }
-                              ,
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => GstInfoPage(
+                                      retailerId : _getretailerId
+                                  )));
+                            }
+                            ,
                             child: Container(
                               margin: const EdgeInsets.fromLTRB(100,0,100,0),
                               padding: const EdgeInsets.all(3.0),
@@ -736,113 +736,118 @@ class _EditRetailerState extends State<EditRetailer> with SingleTickerProviderSt
                                 ),
                               ),
                             )
-                            )
+                        )
                             : Container(),
                       ),
                     ),
                   ],
                 ),
                 Row(
-                  children: <Widget>[
-                    (visibility)?
-                    Expanded(
-                      child: FadeAnimation(
-                        1.8,
-                        (widget.retailer == null)
-                            ?
-                        InkWell(
-                            onTap: ()  async {
+                    children: <Widget>[
+                      (visibility)?
+                      Expanded(
+                        child: FadeAnimation(
+                          1.8,
+                          (widget.retailer == null)
+                              ?
+                          InkWell(
+                              onTap: ()  async {
 
-                              setState(() {
-                                addressController.text.isEmpty ? Fluttertoast.showToast(
-                                    msg: "Please enter Address!",
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.red,
-                                    textColor: Colors.black,
-                                    fontSize: 16.0
-                                ) : _validate = _validate+1;
-                                nameController.text.isEmpty ? Fluttertoast.showToast(
-                                    msg: "Please enter Name!",
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.red,
-                                    textColor: Colors.black,
-                                    fontSize: 16.0
-                                ) : _validate = _validate+1;
-
-                                phoneController.text.isEmpty ? Fluttertoast.showToast(
-                                    msg: "Please enter Phone no!!",
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.red,
-                                    textColor: Colors.black,
-                                    fontSize: 16.0
-                                ) : _validate = _validate+1;
-                              });
-                              if(isVerified) {
-                                if (_validate == 3) {
-                                  retailerProvider.changeLocation(userLocation);
-                                  retailerProvider.changeProfileUrl(imageUrl);
-
-                                  if (_image != null) {
-                                    await uploadPic(context);
-                                    print(imageUrl);
-                                    retailerProvider.changeProfileUrl(imageUrl);
-                                  }
-                                  await retailerProvider.saveRetailer();
-
-                                  Navigator.of(context).pop();
-
-                                  Fluttertoast.showToast(
-                                      msg: "Retailer successfully added!",
+                                setState(() {
+                                  addressController.text.isEmpty ? Fluttertoast.showToast(
+                                      msg: "Please enter Address!",
                                       toastLength: Toast.LENGTH_LONG,
                                       gravity: ToastGravity.BOTTOM,
                                       timeInSecForIosWeb: 1,
-                                      backgroundColor: Colors.black,
-                                      textColor: Colors.white,
+                                      backgroundColor: Colors.red,
+                                      textColor: Colors.black,
+                                      fontSize: 16.0
+                                  )  : _validate = _validate+1;
+                                  nameController.text.isEmpty ? Fluttertoast.showToast(
+                                      msg: "Please enter Name!",
+                                      toastLength: Toast.LENGTH_LONG,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.red,
+                                      textColor: Colors.black,
+                                      fontSize: 16.0
+                                  ) : _validate = _validate+1;
+
+                                  phoneController.text.isEmpty ? Fluttertoast.showToast(
+                                      msg: "Please enter Phone no!!",
+                                      toastLength: Toast.LENGTH_LONG,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.red,
+                                      textColor: Colors.black,
+                                      fontSize: 16.0
+                                  ) : _validate = _validate+1;
+                                });
+                                if(isVerified) {
+                                  if (_validate == 3) {
+                                    retailerProvider.changeLocation(userLocation);
+                                    retailerProvider.changeProfileUrl(imageUrl);
+
+                                    if (_image != null) {
+                                      await uploadPic(context);
+                                      print(imageUrl);
+                                      retailerProvider.changeProfileUrl(imageUrl);
+                                    }
+                                    await retailerProvider.saveRetailer();
+
+                                    Navigator.of(context).pop();
+
+                                    Fluttertoast.showToast(
+                                        msg: "Retailer successfully added!",
+                                        toastLength: Toast.LENGTH_LONG,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor: Colors.black,
+                                        textColor: Colors.white,
+                                        fontSize: 16.0
+                                    );
+
+                                  }
+                                  else {
+                                    _validate = 0;
+                                  }
+                                }
+                                else {
+                                  Fluttertoast.showToast(
+                                      msg: "Please verify GST first!",
+                                      toastLength: Toast.LENGTH_LONG,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.red,
+                                      textColor: Colors.black,
                                       fontSize: 16.0
                                   );
-                                }
-                              }
-                              else {
-                                Fluttertoast.showToast(
-                                    msg: "Please verify GST first!",
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.red,
-                                    textColor: Colors.black,
-                                    fontSize: 16.0
-                                );
+                                  _validate = 0;
 
-                              }
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.fromLTRB(80,0,60,0),
-                              padding: const EdgeInsets.all(3.0),
-                              height: 50,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: Colors.black),
-                              child: Center(
-                                child: Text(
-                                  "Save",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                                }
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.fromLTRB(80,0,60,0),
+                                padding: const EdgeInsets.all(3.0),
+                                height: 50,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    color: Colors.black),
+                                child: Center(
+                                  child: Text(
+                                    "Save",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
-                              ),
-                            )): new Container(),
+                              )): new Container(),
+                        ),
+                      ) : new Container(),
+                      SizedBox(
+                        width: 30,
                       ),
-                    ) : new Container(),
-                    SizedBox(
-                      width: 30,
-                    ),
-]    ),
+                    ]    ),
 
                 SizedBox(
                   height: 10,
